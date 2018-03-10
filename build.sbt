@@ -16,10 +16,10 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
 )
 
-val JacksonVersion = "2.8.11"
+val ScalaticVersion = "3.0.4"
 val ScalaLibraryVersion = "2.12.4"
 
-lazy val versionSnapshot = s"$JacksonVersion-SNAPSHOT"
+lazy val versionSnapshot = s"$ScalaticVersion-SNAPSHOT"
 
 lazy val commonSettings = Seq(
   organization := "pl.writeonly.addons",
@@ -67,7 +67,7 @@ lazy val util = (project in file("addons-util"))
     whiteSetting, graySetting, blackSetting,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      "org.scalactic" %% "scalactic" % "3.0.4"
+      "org.scalactic" %% "scalactic" % ScalaticVersion
     )
   )
 
