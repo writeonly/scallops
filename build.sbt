@@ -45,7 +45,7 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val addons = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
-  .aggregate(spec, util)
+  .aggregate(utils, specs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "addons",
@@ -57,8 +57,8 @@ lazy val addons = (project in file("."))
     coverageFailOnMinimum := true
   )
 
-lazy val util = (project in file("addons-util"))
-  .dependsOn(spec)
+lazy val utils = (project in file("scalaaddon-utils"))
+  .dependsOn(specs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "addons-util",
@@ -71,7 +71,7 @@ lazy val util = (project in file("addons-util"))
     )
   )
 
-lazy val spec = (project in file("addons-spec"))
+lazy val specs = (project in file("scalaaddon-specs"))
   .settings(
     name := "addons-spec",
     commonSettings,
