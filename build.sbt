@@ -1,3 +1,4 @@
+import sbt.Keys.libraryDependencies
 //enablePluqgins(com.lucidchart.sbt.scalafmt.ScalafmtPlugin)
 
 resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases"
@@ -43,25 +44,28 @@ lazy val blackSetting = testOptions in End2EndTest := Seq(Tests.Filter(blackFilt
 lazy val inConfigs = Seq(integrationInConfig, end2endInConfig)
 lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
-lazy val addons = (project in file("."))
+lazy val scalaaddons = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
-  .aggregate(utils, specs)
+  .aggregate(specs, utils)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "addons",
+    name := "scalaaddons",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
     coverageEnabled := true,
     coverageMinimum := 60,
-    coverageFailOnMinimum := true
+    coverageFailOnMinimum := true,
+      libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+      )
   )
 
 lazy val utils = (project in file("scalaaddon-utils"))
   .dependsOn(specs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "addons-util",
+    name := "scalaaddon-utils",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
@@ -73,7 +77,7 @@ lazy val utils = (project in file("scalaaddon-utils"))
 
 lazy val specs = (project in file("scalaaddon-specs"))
   .settings(
-    name := "addons-spec",
+    name := "scalaaddon-specs",
     commonSettings,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
