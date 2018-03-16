@@ -54,7 +54,7 @@ lazy val scalaaddons = (project in file("."))
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
     coverageEnabled := true,
-    coverageMinimum := 60,
+    coverageMinimum := 0,
     coverageFailOnMinimum := true,
       libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
