@@ -1,7 +1,7 @@
 package pl.writeonly.sons.specs
 
-import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.{Matchers, PropSpec}
 
 abstract class GrayVectorSpec
     extends PropSpec
