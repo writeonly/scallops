@@ -1,4 +1,4 @@
-package pl.writeonly.son2.core.util
+package pl.writeonly.son.utils.ops
 
 import java.util.function.Consumer
 
@@ -8,9 +8,8 @@ object Control {
 
   type FAB[A, B] = A => B
   type FAAny[A] = A => Any
-  type Closeable = { def close(): Unit }
 
-  def using[A <: Closeable, B](resource: A)(f: FAB[A, B]): B =
+  def using[A <: AutoCloseable, B](resource: A)(f: FAB[A, B]): B =
     try {
       f(resource)
     } finally {
@@ -21,7 +20,4 @@ object Control {
     override def accept(arg: A): Unit = f(arg)
   }
 
-  implicit class Pipe[A](a: A) {
-    def |>[B](f: A => B) = f(a)
-  }
 }

@@ -1,4 +1,4 @@
-package pl.writeonly.son2.core.util
+package pl.writeonly.son.utils.future
 
 import org.scalactic.{Bad, Good, Or}
 
