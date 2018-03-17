@@ -1,4 +1,4 @@
-package pl.writeonly.son2.spec
+package pl.writeonly.sons.specs
 
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{PrivateMethodTester, WordSpec}

@@ -1,4 +1,4 @@
-package pl.writeonly.son2.spec
+package pl.writeonly.sons.specs
 
 import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks

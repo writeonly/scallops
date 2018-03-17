@@ -1,4 +1,4 @@
-package pl.writeonly.son.utils.ops
+package pl.writeonly.sons.utils.ops
 
 object Pipe {
   implicit class Pipe[A](a: A) {

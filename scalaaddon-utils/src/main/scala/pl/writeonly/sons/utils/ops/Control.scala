@@ -1,4 +1,4 @@
-package pl.writeonly.son.utils.ops
+package pl.writeonly.sons.utils.ops
 
 import java.util.function.Consumer
 

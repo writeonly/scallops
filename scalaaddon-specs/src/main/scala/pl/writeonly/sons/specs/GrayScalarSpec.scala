@@ -1,4 +1,4 @@
-package pl.writeonly.son2.spec
+package pl.writeonly.sons.specs
 
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{FlatSpec, Matchers}
