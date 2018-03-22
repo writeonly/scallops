@@ -19,6 +19,11 @@ object FutureGetOrFailed {
       case Left(f: A)          => Future.failed(toThrowable(f))
     }
 
+  private def toThrowable(a: Any): Throwable = a match {
+    case f: Throwable => f
+    case _            => new IllegalStateException("" + a)
+  }
+
   def tryFuture[A](value: Try[Future[A]])(
       implicit ec: ExecutionContext): Future[A] = value match {
     case Success(f: Future[A]) => f
@@ -29,11 +34,6 @@ object FutureGetOrFailed {
       implicit ec: ExecutionContext): Future[A] = value match {
     case Good(f: Future[A]) => f
     case Bad(f: B)          => Future.failed(toThrowable(f))
-  }
-
-  private def toThrowable(a: Any): Throwable = a match {
-    case f: Throwable => f
-    case _            => new IllegalStateException("" + a)
   }
 
   private def identity[A](a: A) = a

@@ -2,10 +2,9 @@ package pl.writeonly.sons.utils.ops
 
 import java.util.function.Consumer
 
-object Control {
+object AutoCloseableOps {
 
   val UTF_8 = "UTF-8"
-
   type FAB[A, B] = A => B
   type FAAny[A] = A => Any
 

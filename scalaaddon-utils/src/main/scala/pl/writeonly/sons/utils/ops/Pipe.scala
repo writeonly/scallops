@@ -6,7 +6,7 @@ object Pipe {
 
     def ? : Boolean = isNotNull(a)
 
-    def ??(b: => A): A = if (a ?) a else b
+    def ??(b: => A): A = if (a) a else b
   }
 
   implicit def isNotNull[A](a: A): Boolean = Option(a).isDefined
