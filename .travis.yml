@@ -10,7 +10,7 @@ jdk:
 dist: trusty
 sudo: false
 script:
-  - sbt clean scalafmt::test test:scalafmt::test it:scalafmt::test jacoco it:jacoco coverage test it:test assembly coverageReport && sbt coverageAggregate && sbt stats scalastyle
+  - sbt clean sbt:scalafmt::test scalafmt::test test:scalafmt::test it:scalafmt::test jacoco it:jacoco coverage test it:test assembly coverageReport && sbt coverageAggregate && sbt stats scalastyle
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
