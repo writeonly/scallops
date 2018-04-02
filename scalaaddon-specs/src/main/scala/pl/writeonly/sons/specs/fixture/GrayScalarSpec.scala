@@ -2,6 +2,9 @@ package pl.writeonly.sons.specs.fixture
 
 import org.scalatest.Matchers
 import org.scalatest.concurrent.Eventually
-import org.scalatest.fixture.FlatSpec
+import org.scalatest.fixture
 
-abstract class GrayScalarSpec extends FlatSpec with Matchers with Eventually
+abstract class GrayScalarSpec
+    extends fixture.FlatSpec
+    with Matchers
+    with Eventually

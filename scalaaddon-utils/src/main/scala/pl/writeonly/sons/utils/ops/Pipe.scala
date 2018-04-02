@@ -1,6 +1,6 @@
 package pl.writeonly.sons.utils.ops
 
-object Pipe {
+trait Pipe {
   implicit class Pipe[A](a: A) {
     def |>[B](f: A => B) = f(a)
 
@@ -11,3 +11,5 @@ object Pipe {
 
   implicit def isNotNull[A](a: A): Boolean = Option(a).isDefined
 }
+
+object Pipe extends Pipe

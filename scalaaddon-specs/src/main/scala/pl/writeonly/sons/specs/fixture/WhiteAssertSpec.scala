@@ -1,10 +1,9 @@
 package pl.writeonly.sons.specs.fixture
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.PrivateMethodTester
-import org.scalatest.fixture.WordSpec
+import org.scalatest.{PrivateMethodTester, fixture}
 
 abstract class WhiteAssertSpec
-    extends WordSpec
+    extends fixture.WordSpec
     with PrivateMethodTester
     with MockFactory
