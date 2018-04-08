@@ -9,6 +9,7 @@ object OptionOps {
       opt
         .map(Success(_))
         .getOrElse(Failure(exception))
+
     def getOrThrows(exception: => Throwable): A = toTry(exception).get
   }
 

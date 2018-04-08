@@ -1,7 +1,6 @@
 package pl.writeonly.sons.specs.fixture
 
-import org.scalatest.GivenWhenThen
-import org.scalatest.fixture
+import org.scalatest.{GivenWhenThen, fixture}
 
 abstract class BlackSpec extends fixture.FeatureSpec with GivenWhenThen
 
