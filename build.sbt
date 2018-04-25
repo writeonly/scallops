@@ -46,7 +46,7 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scalaaddons = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, utils)
+  .aggregate(specs, ops, pipe, future)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaaddons",
@@ -61,17 +61,48 @@ lazy val scalaaddons = (project in file("."))
       )
   )
 
-lazy val utils = (project in file("scalaaddon-utils"))
+lazy val ops = (project in file("scala-ops"))
   .dependsOn(specs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "scalaaddon-utils",
+    name := "scala-ops",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      "org.scalactic" %% "scalactic" % ScalaticVersion
+      "org.scalactic" %% "scalactic" % ScalaticVersion,
+      "org.typelevel" %% "cats-core" % "1.1.0"
+
+    )
+  )
+
+lazy val future = (project in file("scala-for-future"))
+  .dependsOn(specs, pipe)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-for-future",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+      "org.scalactic" %% "scalactic" % ScalaticVersion,
+      "org.typelevel" %% "cats-core" % "1.1.0"
+
+    )
+  )
+
+lazy val pipe = (project in file("scala-pipe"))
+  .dependsOn(specs)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-pipe",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
     )
   )
 
