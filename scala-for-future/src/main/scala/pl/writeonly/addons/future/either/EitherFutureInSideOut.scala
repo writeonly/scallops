@@ -12,7 +12,7 @@ object EitherFutureInSideOut extends EitherTypes2 {
   )(implicit ec: ExecutionContext): Result[A, B] =
     value match {
       case Right(f: Future[B]) => for (a <- f) yield Right(a)
-      case Left(a)          => Left(a) |> successful
+      case Left(a)             => Left(a) |> successful
     }
 
   implicit class FutureEither[A, B](value: Value[A, B])(
