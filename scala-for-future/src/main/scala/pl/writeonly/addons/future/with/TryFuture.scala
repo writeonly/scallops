@@ -20,7 +20,7 @@ object TryFuture extends Types1 with Utils {
 
   def inSideOut[A](value: Value[A])(implicit ec: ExecutionContext): Result[A] = value match {
     case Success(f: Future[A]) => for (a <- f) yield Success(a)
-    case Failure(a)            => Failure(a) |> successful
+    case a: Failure[A]         => a |> successful
   }
 
   override def recover[A](value: Future[A])(implicit ec: ExecutionContext): Recovered[A] =
