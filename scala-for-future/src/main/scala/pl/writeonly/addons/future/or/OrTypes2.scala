@@ -1,11 +1,12 @@
 package pl.writeonly.addons.future.or
 
-import cats.data.Validated
+import org.scalactic.Or
 import pl.writeonly.addons.future.Types2
 
 import scala.concurrent.Future
 
 trait OrTypes2 extends Types2 {
-  type Value[A, B] = Validated[A, Future[B]]
-  type Result[A, B] = Future[Validated[A, B]]
+  type Value[A, B] = Or[Future[B], A]
+  type Result[A, B] = Future[B Or A]
+
 }

@@ -9,9 +9,15 @@ trait Pipe {
 
     def ??(b: => A): A = if (a) a else b
 
-    def $$[B](f: A => B): A = { f(a); a }
+    def $$[B](f: A => B): A = {
+      f(a);
+      a
+    }
 
-    def #!(str: String = ""): A = { println(str + a); a }
+    def #!(str: String = ""): A = {
+      println(str + a);
+      a
+    }
   }
 
   implicit def isNotNull[A](a: A): Boolean = Option(a).isDefined

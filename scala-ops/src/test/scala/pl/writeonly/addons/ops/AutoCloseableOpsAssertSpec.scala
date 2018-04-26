@@ -1,7 +1,7 @@
 package pl.writeonly.addons.ops
 
+import pl.writeonly.addons.ops.AutoCloseableOps.{FAAny, toConsumerAny}
 import pl.writeonly.sons.specs.WhiteAssertSpec
-import AutoCloseableOps.{FAAny, toConsumerAny}
 
 class AutoCloseableOpsAssertSpec extends WhiteAssertSpec {
 

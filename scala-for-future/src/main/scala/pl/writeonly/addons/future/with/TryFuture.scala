@@ -13,13 +13,13 @@ object TryFuture extends TryTypes1 {
     case Failure(f: Throwable) => f |> failed
   }
 
-  implicit class TryFutureGetOrFailed[A](value: Value[A])(implicit ec: ExecutionContext) {
-    def tryFuture: Future[A] = TryFuture.getOrFailed(value)(ec)
-  }
-
   def inSideOut[A](value: Value[A])(implicit ec: ExecutionContext): Result[A] = value match {
     case Success(f: Future[A]) => for (a <- f) yield Success(a)
-    case Failure(a)            => Failure(a) |> successful
+    case Failure(a) => Failure(a) |> successful
+  }
+
+  implicit class TryFutureGetOrFailed[A](value: Value[A])(implicit ec: ExecutionContext) {
+    def tryFuture: Future[A] = TryFuture.getOrFailed(value)(ec)
   }
 
   implicit class TryFutureInSideOut[A](value: Value[A])(implicit ec: ExecutionContext) {

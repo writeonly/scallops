@@ -4,9 +4,9 @@ import java.util.function.Consumer
 
 object AutoCloseableOps {
 
-  val UTF_8 = "UTF-8"
   type FAB[A, B] = A => B
   type FAAny[A] = A => Any
+  val UTF_8 = "UTF-8"
 
   def using[A <: AutoCloseable, B](resource: A)(f: FAB[A, B]): B =
     try {

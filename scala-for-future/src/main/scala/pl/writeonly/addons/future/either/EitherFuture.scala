@@ -11,13 +11,13 @@ object EitherFuture extends EitherTypes2 with ToThrowable {
   override def getOrFailed[A, B](value: Value[A, B])(implicit ec: ExecutionContext): Future[B] =
     value match {
       case Right(f: Future[B]) => f
-      case Left(f)             => f |> toThrowable |> failed
+      case Left(f) => f |> toThrowable |> failed
     }
 
   override def inSideOut[A, B](value: Value[A, B])(implicit ec: ExecutionContext): Result[A, B] =
     value match {
       case Right(f: Future[B]) => for (a <- f) yield Right(a)
-      case Left(a)             => Left(a) |> successful
+      case Left(a) => Left(a) |> successful
     }
 
   implicit class FutureEitherInSideOut[A, B](value: Value[A, B])(implicit ec: ExecutionContext) {
