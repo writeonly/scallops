@@ -11,16 +11,12 @@ object OrFutureGetOrFailed extends ToThrowable {
 
   type Value[A, B] = Future[A] Or B
 
-  def orFuture[A, B](
-    value: Value[A, B]
-  )(implicit ec: ExecutionContext): Future[A] = value match {
+  def orFuture[A, B](value: Value[A, B])(implicit ec: ExecutionContext): Future[A] = value match {
     case Good(f: Future[A]) => f
     case Bad(f)             => f |> toThrowable |> failed
   }
 
-  implicit class FutureOr[A, B](value: Value[A, B])(
-    implicit ec: ExecutionContext
-  ) {
+  implicit class FutureOr[A, B](value: Value[A, B])(implicit ec: ExecutionContext) {
     def orFuture: Future[A] = OrFutureGetOrFailed.orFuture(value)(ec)
   }
 
