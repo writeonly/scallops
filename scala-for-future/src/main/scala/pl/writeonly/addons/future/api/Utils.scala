@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future
+package pl.writeonly.addons.future.api
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -8,10 +8,11 @@ trait Utils {
     case _            => new IllegalStateException(s"$a")
   }
 
-  def recover[S, T](value: Future[T], s: T => S, pf: PartialFunction[Throwable, S])(
-    implicit executor: ExecutionContext
-  ): Future[S] =
-    value
-      .transform(s, e => e)
+  def transformAndRecover[S, T](
+    v: Future[T],
+    s: T => S,
+    pf: PartialFunction[Throwable, S]
+  )(implicit executor: ExecutionContext): Future[S] =
+    v.transform(s, e => e)
       .recover(pf)
 }

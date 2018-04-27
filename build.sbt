@@ -1,5 +1,4 @@
-import sbt.Keys.libraryDependencies
-//enablePluqgins(com.lucidchart.sbt.scalafmt.ScalafmtPlugin)
+enablePlugins(com.lucidchart.sbt.scalafmt.ScalafmtPlugin)
 
 resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases"
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -20,6 +19,9 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
 )
 
+scalastyleFailOnWarning := true
+scalastyleFailOnError := true
+
 val ScalaticVersion = "3.0.4"
 val ScalaLibraryVersion = "2.12.4"
 
@@ -30,13 +32,21 @@ lazy val commonSettings = Seq(
   scalaVersion := ScalaLibraryVersion,
   version := versionSnapshot
 )
+
 lazy val IntegrationTest = config("it") extend(Test)
 lazy val End2EndTest = config("et") extend(Test)
+
+logBuffered in Test := false
+testOptions in Test ++= Seq(
+  Tests.Argument(TestFrameworks.ScalaTest, "-o"),
+  Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
+  Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/test-reports")
+)
 
 lazy val integrationInConfig = inConfig(IntegrationTest)(Defaults.testTasks)
 lazy val end2endInConfig = inConfig(End2EndTest)(Defaults.testTasks)
 
-def whiteFilter(name: String): Boolean = name endsWith "AssertSpec"
+def whiteFilter(name: String): Boolean = (name endsWith "AssertSpec") || (name endsWith "FutureSpec")
 def grayFilter(name: String): Boolean = (name endsWith "ScalarSpec") || (name endsWith "VectorSpec")
 def blackFilter(name: String): Boolean = (name endsWith "FunSpec") || (name endsWith "FeatureSpec")
 
