@@ -75,7 +75,7 @@ lazy val scalaaddons = (project in file("."))
   )
 
 lazy val ops = (project in file("scala-ops"))
-  .dependsOn(specs)
+  .dependsOn(specs, pipe)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scala-ops",
