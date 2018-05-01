@@ -1,12 +1,11 @@
-package pl.writeonly.addons.future.ops
+package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Bad, Good, Or}
-import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, Recover}
+import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
-import scala.concurrent.Future.{failed, successful}
 
 object OrFuture extends Types2 with Utils {
 
@@ -17,7 +16,7 @@ object OrFuture extends Types2 with Utils {
   )(implicit ec: EC): Future[B] =
     v match {
       case Good(f: Future[B]) => f
-      case Bad(f)             => f |> toThrowable |> failed
+      case Bad(f)             => f |> toThrowable |> Future.failed
     }
 
   override def inSideOut[A, B](
@@ -25,13 +24,13 @@ object OrFuture extends Types2 with Utils {
   )(implicit ec: EC): FutureValue[A, B] =
     v match {
       case Good(f: Future[B]) => for (a <- f) yield Good(a)
-      case a: Bad[A]          => a |> successful
+      case a: Bad[A]          => a |> Future.successful
     }
 
 //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
-    transformAndRecover(v, (s: A) => Good(s), { case t => Bad(t) })
+    transform(v, (s: A) => Good(s), { case t => Bad(t) })
 
   implicit class OrFutureInSideOut[B, A](v: Future[B] Or A)
       extends InSideOut[Value[A, B]] {
@@ -45,10 +44,10 @@ object OrFuture extends Types2 with Utils {
       OrFuture.getOrFailed(v)(ec)
   }
 
-  implicit class OrFutureRecover[A](value: Future[A])
-      extends Recover[Recovered[A]] {
+  implicit class OrFutureTransRecover[A](value: Future[A])
+      extends TransRecover[Recovered[A]] {
 
-    override def recover(implicit ec: EC): Future[A Or Throwable] =
+    override def transRecover(implicit ec: EC): Future[A Or Throwable] =
       OrFuture.recover(value)(ec)
   }
 

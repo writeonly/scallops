@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future.ops
+package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.api.EC
 import pl.writeonly.addons.future.api.Ops.InSideOut

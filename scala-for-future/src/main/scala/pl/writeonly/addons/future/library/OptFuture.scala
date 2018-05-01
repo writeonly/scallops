@@ -1,6 +1,6 @@
-package pl.writeonly.addons.future.ops
+package pl.writeonly.addons.future.library
 
-import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, Recover}
+import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types1, Utils}
 import pl.writeonly.addons.pipe.Pipe._
 
@@ -25,8 +25,10 @@ object OptFuture extends Types1 with Utils {
       case None               => None |> successful
     }
 
-  override def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
-    transformAndRecover(v, (s: A) => Option(s), { case _ => None })
+  override def transRecover[A](
+    v: Future[A]
+  )(implicit ec: EC): FutureRecovered[A] =
+    transform(v, (s: A) => Option(s), { case _ => None })
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))
@@ -45,9 +47,10 @@ object OptFuture extends Types1 with Utils {
       OptFuture.inSideOut(v)(ec)
   }
 
-  implicit class OptFutureRecover[A](v: Future[A]) extends Recover[Value[A]] {
-    override def recover(implicit ec: EC): FutureRecovered[A] =
-      OptFuture.recover(v)(ec)
+  implicit class OptFutureTransRecover[A](v: Future[A])
+      extends TransRecover[Value[A]] {
+    override def transRecover(implicit ec: EC): FutureRecovered[A] =
+      OptFuture.transRecover(v)(ec)
   }
 
 }

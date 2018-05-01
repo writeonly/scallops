@@ -18,7 +18,7 @@ trait Types1 {
     implicit ec: ExecutionContext
   ): Future[A]
 
-  def recover[A](value: Future[A])(
+  def transRecover[A](value: Future[A])(
     implicit ec: ExecutionContext
   ): FutureRecovered[A]
 }

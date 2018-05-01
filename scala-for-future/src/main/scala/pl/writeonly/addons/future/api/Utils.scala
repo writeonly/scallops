@@ -8,7 +8,7 @@ trait Utils {
     case _            => new IllegalStateException(s"$a")
   }
 
-  def transformAndRecover[S, T](
+  def transform[S, T](
     v: Future[T],
     s: T => S,
     pf: PartialFunction[Throwable, S]

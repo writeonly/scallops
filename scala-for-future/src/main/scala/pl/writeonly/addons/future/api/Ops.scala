@@ -11,8 +11,8 @@ object Ops {
     def inSideOut(implicit ec: EC): Future[A]
   }
 
-  trait Recover[A] {
-    def recover(implicit ec: EC): Future[A]
+  trait TransRecover[A] {
+    def transRecover(implicit ec: EC): Future[A]
   }
 
 }
