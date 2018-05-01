@@ -2,7 +2,8 @@ package pl.writeonly.addons.future.cats
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import pl.writeonly.addons.future.{CaseException, RemoteService}
+import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.addons.future.cats.ValidatedFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -45,7 +46,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe Invalid(CaseException())
         }
@@ -53,7 +54,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec {
       it("for successful and failed") {
         for {
           s <- RemoteService.successful1.transRecover
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           s shouldBe Valid(1)
           f shouldBe Invalid(CaseException())

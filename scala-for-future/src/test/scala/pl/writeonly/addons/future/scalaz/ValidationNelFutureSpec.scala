@@ -1,7 +1,8 @@
 package pl.writeonly.addons.future.scalaz
 
+import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.addons.future.scalaz.ValidationNelFuture._
-import pl.writeonly.addons.future.{CaseException, RemoteService, RemoteTuple3}
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, NonEmptyList, Success, ValidationNel}
 
@@ -44,7 +45,7 @@ class ValidationNelFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe Failure(NonEmptyList(CaseException()))
         }

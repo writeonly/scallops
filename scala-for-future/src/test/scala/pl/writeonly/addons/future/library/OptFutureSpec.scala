@@ -1,6 +1,6 @@
 package pl.writeonly.addons.future.library
 
-import pl.writeonly.addons.future.{CaseException, RemoteService}
+import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.library.OptFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -42,7 +42,7 @@ class OptFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe None
         }

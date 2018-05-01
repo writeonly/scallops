@@ -1,6 +1,7 @@
 package pl.writeonly.addons.future.scalaz
 
-import pl.writeonly.addons.future.{CaseException, RemoteService}
+import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.addons.future.scalaz.HydraFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{-\/, \/, \/-}
@@ -43,7 +44,7 @@ class HydraFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe -\/(CaseException())
         }

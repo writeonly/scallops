@@ -1,7 +1,8 @@
 package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Bad, ErrorMessage, Good, Or}
-import pl.writeonly.addons.future.{CaseException, RemoteService}
+import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.addons.future.scalactic.OrFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -45,7 +46,7 @@ class OrFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe Bad(CaseException())
         }

@@ -3,8 +3,10 @@ package pl.writeonly.addons.future.cats
 import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, ValidatedNel}
 import cats.implicits._
+import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.future.cats.ValidatedNelFuture._
-import pl.writeonly.addons.future.{CaseException, RemoteService, RemoteTuple3}
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -46,7 +48,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec {
       }
       it("for failed") {
         for {
-          f <- RemoteService.failed.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           f shouldBe Invalid(NonEmptyList(CaseException(), List.empty))
         }
