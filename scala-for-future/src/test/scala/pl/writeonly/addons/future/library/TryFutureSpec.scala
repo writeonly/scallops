@@ -34,7 +34,7 @@ class TryFutureSpec extends WhiteFutureSpec {
         }
       }
     }
-    describe("for Failure with successful") {
+    describe("for Success with failed") {
       val v: Try[FutureResult] = Try(Future.failed(CaseException()))
       it("inSideOut") {
         recoverToSucceededIf[CaseException] {
@@ -42,6 +42,30 @@ class TryFutureSpec extends WhiteFutureSpec {
             i <- v.inSideOut
           } yield i
 
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[CaseException] {
+          for {
+            i <- v.getOrFailed
+          } yield i
+        }
+      }
+      it("transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i shouldBe Failure(CaseException())
+        }
+      }
+    }
+    describe("for Failure") {
+      val v: Try[FutureResult] = Failure(CaseException())
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Failure(CaseException())
         }
       }
       it("getOrFailed") {
