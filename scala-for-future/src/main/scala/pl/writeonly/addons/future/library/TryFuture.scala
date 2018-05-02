@@ -7,6 +7,7 @@ import pl.writeonly.addons.pipe.Pipe._
 import scala.concurrent.Future
 import scala.concurrent.Future.{failed, successful}
 import scala.util.{Failure, Success, Try}
+import pl.writeonly.addons.ops.FutureOps._
 
 object TryFuture extends Types1 with Utils {
 
@@ -27,7 +28,7 @@ object TryFuture extends Types1 with Utils {
   override def transRecover[A](
     v: Future[A]
   )(implicit ec: EC): FutureRecovered[A] =
-    transform(v, (s: A) => Success(s), { case t => Failure(t) })
+    v.transformAndRecover((s: A) => Success(s), { case t => Failure(t) })
 
   //    value.transformWith(Future.successful)
 

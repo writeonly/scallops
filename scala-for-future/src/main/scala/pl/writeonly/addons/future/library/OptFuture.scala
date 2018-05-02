@@ -7,6 +7,8 @@ import pl.writeonly.addons.pipe.Pipe._
 import scala.concurrent.Future
 import scala.concurrent.Future.{failed, successful}
 
+import pl.writeonly.addons.ops.FutureOps._
+
 object OptFuture extends Types1 with Utils {
 
   override type Value[A] = Option[A]
@@ -28,7 +30,7 @@ object OptFuture extends Types1 with Utils {
   override def transRecover[A](
     v: Future[A]
   )(implicit ec: EC): FutureRecovered[A] =
-    transform(v, (s: A) => Option(s), { case _ => None })
+    v.transformAndRecover((s: A) => Option(s), { case _ => None })
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))

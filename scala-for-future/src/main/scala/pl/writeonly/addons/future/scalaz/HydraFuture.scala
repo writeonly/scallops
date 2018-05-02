@@ -7,6 +7,7 @@ import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
 import scala.concurrent.Future.{failed, successful}
+import pl.writeonly.addons.ops.FutureOps._
 
 object HydraFuture extends Types2 with Utils {
   override type Value[A, B] = \/[A, B]
@@ -28,7 +29,7 @@ object HydraFuture extends Types2 with Utils {
     }
 
   override def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
-    transform(v, (s: A) => \/-(s), { case t => -\/(t) })
+    v.transformAndRecover((s: A) => \/-(s), { case t => -\/(t) })
 
   //    value.transform({
   //      case Success(s) => Success(Right(s))

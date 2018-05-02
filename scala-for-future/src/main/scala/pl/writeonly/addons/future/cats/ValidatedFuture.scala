@@ -7,6 +7,7 @@ import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
+import pl.writeonly.addons.ops.FutureOps._
 
 object ValidatedFuture extends Types2 with Utils {
 
@@ -29,7 +30,9 @@ object ValidatedFuture extends Types2 with Utils {
     }
 
   override def recover[B](v: Future[B])(implicit ec: EC): FutureRecovered[B] =
-    transform(v, (s: B) => Valid(s), { case t => Validated.invalid(t) })
+    v.transformAndRecover(
+      (s: B) => Valid(s), { case t => Validated.invalid(t) }
+    )
 
   //    value.transform({
   //      case Success(s) => Success(Good(s))

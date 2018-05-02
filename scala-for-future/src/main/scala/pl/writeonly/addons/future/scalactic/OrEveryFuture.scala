@@ -6,6 +6,7 @@ import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
+import pl.writeonly.addons.ops.FutureOps._
 
 object OrEveryFuture extends Types2 with Utils {
 
@@ -30,7 +31,7 @@ object OrEveryFuture extends Types2 with Utils {
 //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
-    transform(v, (s: A) => Good(s), { case t => Bad(One(t)) })
+    v.transformAndRecover((s: A) => Good(s), { case t => Bad(One(t)) })
 
   implicit class OrEveryFutureInSideOut[B, A](v: ValueFuture[A, B])
       extends InSideOut[Value[A, B]] {

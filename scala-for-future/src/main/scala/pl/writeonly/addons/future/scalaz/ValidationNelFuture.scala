@@ -6,6 +6,7 @@ import pl.writeonly.addons.pipe.Pipe._
 import scalaz.{Failure, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
+import pl.writeonly.addons.ops.FutureOps._
 
 object ValidationNelFuture extends Types2 with Utils {
 
@@ -28,7 +29,9 @@ object ValidationNelFuture extends Types2 with Utils {
     }
 
   override def recover[B](v: Future[B])(implicit ec: EC): FutureRecovered[B] =
-    transform(v, (s: B) => Success(s), { case t => Validation.failureNel(t) })
+    v.transformAndRecover((s: B) => Success(s), {
+      case t => Validation.failureNel(t)
+    })
 
   //    value.transform({
   //      case Success(s) => Success(Good(s))

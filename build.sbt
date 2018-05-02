@@ -76,6 +76,22 @@ lazy val scalaaddons = (project in file("."))
       )
   )
 
+lazy val future = (project in file("scala-for-future"))
+  .dependsOn(specs, pipe, ops)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-for-future",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+      "org.scalactic" %% "scalactic" % ScalaticVersion,
+      "org.typelevel" %% "cats-core" % "1.1.0",
+      "org.scalaz" %% "scalaz-core" % "7.2.22"
+    )
+  )
+
 lazy val ops = (project in file("scala-ops"))
   .dependsOn(specs, pipe)
   .configs(IntegrationTest, End2EndTest)
@@ -89,22 +105,6 @@ lazy val ops = (project in file("scala-ops"))
       "org.scalactic" %% "scalactic" % ScalaticVersion,
       "org.typelevel" %% "cats-core" % "1.1.0"
 
-    )
-  )
-
-lazy val future = (project in file("scala-for-future"))
-  .dependsOn(specs, pipe)
-  .configs(IntegrationTest, End2EndTest)
-  .settings(
-    name := "scala-for-future",
-    commonSettings,
-    integrationInConfig, end2endInConfig,
-    whiteSetting, graySetting, blackSetting,
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      "org.scalactic" %% "scalactic" % ScalaticVersion,
-      "org.typelevel" %% "cats-core" % "1.1.0",
-      "org.scalaz" %% "scalaz-core" % "7.2.22"
     )
   )
 

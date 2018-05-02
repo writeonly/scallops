@@ -6,6 +6,7 @@ import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
 import scala.concurrent.Future.{failed, successful}
+import pl.writeonly.addons.ops.FutureOps._
 
 object EitherFuture extends Types2 with Utils {
   override type Value[A, B] = Either[A, B]
@@ -27,7 +28,7 @@ object EitherFuture extends Types2 with Utils {
     }
 
   override def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
-    transform(v, (s: A) => Right(s), { case t => Left(t) })
+    v.transformAndRecover((s: A) => Right(s), { case t => Left(t) })
 
   //    value.transform({
   //      case Success(s) => Success(Right(s))
