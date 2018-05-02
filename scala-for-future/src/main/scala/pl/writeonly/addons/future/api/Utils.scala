@@ -1,6 +1,9 @@
 package pl.writeonly.addons.future.api
 
+import cats.data.NonEmptyList
+
 import scala.concurrent.{ExecutionContext, Future}
+import pl.writeonly.addons.pipe.Pipe._
 
 trait Utils {
   protected def toThrowable(a: Any): Throwable = a match {

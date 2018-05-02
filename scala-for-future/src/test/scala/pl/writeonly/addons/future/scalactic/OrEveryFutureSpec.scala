@@ -1,19 +1,21 @@
 package pl.writeonly.addons.future.scalactic
 
+import cats.data.NonEmptyList
 import org.scalactic._
+import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.future.scalactic.OrEveryFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OrEveryFutureSpec extends WhiteFutureSpec {
+class OrEveryFutureSpec extends WhiteFutureSpec with EitherValues {
   describe("A Or Every") {
 
     describe("for Good with successful") {
-      val v: Future[Int] Or Every[ErrorMessage] =
+      val v: FutureResult Or Every[ErrorMessage] =
         Good(Future.successful(1))
       it("inSideOut") {
         for {
@@ -34,6 +36,35 @@ class OrEveryFutureSpec extends WhiteFutureSpec {
           i <- v.getOrFailed.transRecover
         } yield {
           i shouldBe Good(1)
+        }
+      }
+    }
+    describe("for Bad") {
+      val v: FutureResult Or Every[ErrorMessage] =
+        Bad(One(CaseException().message))
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Bad(One(CaseException().message))
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.toEither.left.value shouldBe a[One[Throwable]]
+          i.toEither.left.value should have size 1
+          i.toEither.left.value.head shouldBe a[IllegalStateException]
         }
       }
     }

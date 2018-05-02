@@ -17,6 +17,7 @@ scalacOptions ++= Seq(
   "-feature",
   "-Ywarn-unused-import",
   "-Xfatal-warnings",
+  "-Xlint",
 )
 
 scalastyleFailOnWarning := true

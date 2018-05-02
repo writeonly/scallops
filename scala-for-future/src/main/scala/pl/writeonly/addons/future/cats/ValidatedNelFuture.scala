@@ -1,12 +1,14 @@
 package pl.writeonly.addons.future.cats
 
-import cats.data.{Validated, ValidatedNel}
+import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.data.Validated.{Invalid, Valid}
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
+
+import cats.implicits._
 
 object ValidatedNelFuture extends Types2 with Utils {
 
@@ -25,7 +27,9 @@ object ValidatedNelFuture extends Types2 with Utils {
   )(implicit ec: EC): Future[B] =
     v match {
       case Valid(f: Future[B]) => f
-      case a: Invalid[A]       => a |> toThrowable |> Future.failed
+      case a: Invalid[NonEmptyList[A]] if a.e.size === 1 =>
+        a.e.head |> toThrowable |> Future.failed
+      case a: Invalid[NonEmptyList[A]] => a.e |> toThrowable |> Future.failed
     }
 
   override def recover[B](v: Future[B])(implicit ec: EC): FutureRecovered[B] =

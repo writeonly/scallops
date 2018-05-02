@@ -1,16 +1,17 @@
 package pl.writeonly.addons.future.library
 
+import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.library.EitherFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class EitherFutureSpec extends WhiteFutureSpec {
+class EitherFutureSpec extends WhiteFutureSpec with EitherValues {
   describe("A Either") {
     describe("for Right with successful") {
-      val v = Right[String, Future[Int]](Future.successful(1))
+      val v = Right[String, FutureResult](Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -30,6 +31,32 @@ class EitherFutureSpec extends WhiteFutureSpec {
           i <- v.getOrFailed.transRecover
         } yield {
           i shouldBe Right(1)
+        }
+      }
+    }
+    describe("for Left with successful") {
+      val v = Left[String, FutureResult](CaseException().message)
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Left(CaseException().message)
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe CaseException().message
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.left.value shouldBe a[IllegalStateException]
         }
       }
     }

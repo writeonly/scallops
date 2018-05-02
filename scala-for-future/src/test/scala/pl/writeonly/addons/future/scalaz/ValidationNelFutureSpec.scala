@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.scalaz.ValidationNelFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, NonEmptyList, Success, ValidationNel}
@@ -11,7 +11,7 @@ import scala.concurrent.Future
 class ValidationNelFutureSpec extends WhiteFutureSpec {
   describe("A ValidationNel") {
     describe("for Validation with successful") {
-      val v: ValidationNel[String, Future[Int]] =
+      val v: ValidationNel[String, FutureResult] =
         Success(Future.successful(1))
       it("inSideOut") {
         for {

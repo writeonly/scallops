@@ -1,21 +1,22 @@
 package pl.writeonly.addons.future.cats
 
 import cats.data.Validated.{Invalid, Valid}
-import cats.data.{NonEmptyList, ValidatedNel}
+import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
+import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.future.cats.ValidatedNelFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class ValidatedNelFutureSpec extends WhiteFutureSpec {
+class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
   describe("A ValidatedNel") {
     describe("for Valid with successful") {
-      val v: ValidatedNel[String, Future[Int]] =
-        Valid(Future.successful(1))
+      val v: ValidatedNel[String, FutureResult] =
+        Validated.validNel(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -38,6 +39,36 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec {
         }
       }
     }
+    describe("for Invalid") {
+      val v: ValidatedNel[String, FutureResult] =
+        Validated.invalidNel(CaseException().message)
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Invalid(NonEmptyList.one(CaseException().message))
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe NonEmptyList.one(CaseException().message)
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
+          i.toEither.left.value should have size 1
+          i.toEither.left.value.head shouldBe a[IllegalStateException]
+        }
+      }
+    }
+
     describe("transRecover") {
       it("for successful") {
         for {

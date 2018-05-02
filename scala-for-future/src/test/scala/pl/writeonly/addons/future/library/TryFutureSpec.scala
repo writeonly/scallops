@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.library.TryFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -11,7 +11,7 @@ import scala.util.{Failure, Success, Try}
 class TryFutureSpec extends WhiteFutureSpec {
   describe("A Try") {
     describe("for Success with successful") {
-      val v = Try(Future.successful(1))
+      val v: Try[FutureResult] = Try(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -31,6 +31,31 @@ class TryFutureSpec extends WhiteFutureSpec {
           i <- v.getOrFailed.transRecover
         } yield {
           i shouldBe Success(1)
+        }
+      }
+    }
+    describe("for Failure with successful") {
+      val v: Try[FutureResult] = Try(Future.failed(CaseException()))
+      it("inSideOut") {
+        recoverToSucceededIf[CaseException] {
+          for {
+            i <- v.inSideOut
+          } yield i
+
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[CaseException] {
+          for {
+            i <- v.getOrFailed
+          } yield i
+        }
+      }
+      it("transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i shouldBe Failure(CaseException())
         }
       }
     }

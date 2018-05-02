@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.scalaz.HydraFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{-\/, \/, \/-}
@@ -11,7 +11,7 @@ import scala.concurrent.Future
 class HydraFutureSpec extends WhiteFutureSpec {
   describe("A Hydra ") {
     describe("for Right with successful") {
-      val v: String \/ Future[Int] = \/-[Future[Int]](Future.successful(1))
+      val v: String \/ FutureResult = \/-[FutureResult](Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut

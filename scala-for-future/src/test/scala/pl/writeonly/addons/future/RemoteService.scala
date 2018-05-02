@@ -22,7 +22,7 @@ object RemoteService {
 
   def failed(message: String) = Future.failed(CaseException(message))
 
-  final case class CaseException(message: String = InternalServerError)
+  final case class CaseException(val message: String = InternalServerError)
       extends Exception(message)
 
 }

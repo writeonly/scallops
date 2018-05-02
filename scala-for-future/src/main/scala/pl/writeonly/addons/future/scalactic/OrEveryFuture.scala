@@ -24,7 +24,7 @@ object OrEveryFuture extends Types2 with Utils {
   )(implicit ec: EC): FutureValue[A, B] =
     v match {
       case Good(f: Future[B]) => for (a <- f) yield Good(a)
-      case a: Bad[A]          => a |> Future.successful
+      case a @ Bad(_)         => a |> Future.successful
     }
 
 //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???

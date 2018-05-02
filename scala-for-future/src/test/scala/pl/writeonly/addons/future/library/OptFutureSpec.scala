@@ -1,6 +1,7 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.RemoteService.FutureResult
 import pl.writeonly.addons.future.library.OptFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -29,6 +30,31 @@ class OptFutureSpec extends WhiteFutureSpec {
           i <- v.getOrFailed.transRecover
         } yield {
           i shouldBe Some(1)
+        }
+      }
+    }
+    describe("for None with successful") {
+      val v: Option[FutureResult] = None
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe None
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield i
+
+        }
+      }
+      it("transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i shouldBe None
         }
       }
     }
