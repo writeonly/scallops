@@ -27,7 +27,7 @@ object MaybeFuture extends Types1 with Utils {
   override def transRecover[A](
     v: Future[A]
   )(implicit ec: EC): FutureRecovered[A] =
-    v.transformAndRecover((s: A) => Just(s), { case _ => Empty() })
+    v.transformAndRecover((s: A) => Just(s), { case _ => Maybe.empty })
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))

@@ -26,7 +26,7 @@ object OptFuture extends Types1 with Utils {
   override def transRecover[A](
     v: Future[A]
   )(implicit ec: EC): FutureRecovered[A] =
-    v.transformAndRecover((s: A) => Option(s), { case _ => None })
+    v.transformAndRecover((s: A) => Option(s), { case _ => Option.empty })
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))

@@ -27,7 +27,6 @@ object TryFuture extends Types1 with Utils {
   )(implicit ec: EC): FutureRecovered[A] =
     v.transformAndRecover((s: A) => Success(s), { case t => Failure(t) })
 
-
   implicit class TryFutureGetOrFailed[A](value: ValueFuture[A])
       extends GetOrFailed[A] {
     override def getOrFailed(implicit ec: EC): Future[A] =
