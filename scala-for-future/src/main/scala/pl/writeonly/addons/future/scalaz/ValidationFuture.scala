@@ -2,11 +2,9 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
-import pl.writeonly.addons.pipe.Pipe._
 import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
-import pl.writeonly.addons.ops.FutureOps._
 
 object ValidationFuture extends Types2 with Utils {
 

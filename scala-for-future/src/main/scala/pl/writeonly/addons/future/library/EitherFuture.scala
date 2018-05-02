@@ -2,11 +2,8 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
-import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
-import scala.concurrent.Future.{failed, successful}
-import pl.writeonly.addons.ops.FutureOps._
 
 object EitherFuture extends Types2 with Utils {
   override type Value[A, B] = Either[A, B]
@@ -16,7 +13,7 @@ object EitherFuture extends Types2 with Utils {
   )(implicit ec: EC): Future[B] =
     v match {
       case Right(f: Future[B]) => f
-      case Left(f)             => f |> toThrowable |> failed
+      case Left(f)             => f |> toThrowable |> Future.failed
     }
 
   override def inSideOut[A, B](
@@ -24,7 +21,7 @@ object EitherFuture extends Types2 with Utils {
   )(implicit ec: EC): FutureValue[A, B] =
     v match {
       case Right(f: Future[B]) => for (a <- f) yield Right(a)
-      case a: Left[A, B]       => a |> successful
+      case a: Left[A, B]       => a |> Future.successful
     }
 
   override def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =

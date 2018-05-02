@@ -1,15 +1,12 @@
 package pl.writeonly.addons.future.cats
 
-import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.data.Validated.{Invalid, Valid}
+import cats.data.{NonEmptyList, Validated, ValidatedNel}
+import cats.implicits._
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
-import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
-
-import cats.implicits._
-import pl.writeonly.addons.ops.FutureOps._
 
 object ValidatedNelFuture extends Types2 with Utils {
 

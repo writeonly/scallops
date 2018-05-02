@@ -3,10 +3,8 @@ package pl.writeonly.addons.future.scalactic
 import org.scalactic._
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, Types2, Utils}
-import pl.writeonly.addons.pipe.Pipe._
 
 import scala.concurrent.Future
-import pl.writeonly.addons.ops.FutureOps._
 
 object OrEveryFuture extends Types2 with Utils {
 
