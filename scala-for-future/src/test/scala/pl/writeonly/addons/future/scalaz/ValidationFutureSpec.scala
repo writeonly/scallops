@@ -1,5 +1,6 @@
 package pl.writeonly.addons.future.scalaz
 
+import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.sons.specs.WhiteFutureSpec
@@ -7,11 +8,14 @@ import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
 
-class ValidationFutureSpec extends WhiteFutureSpec with ValidationFuture {
+class ValidationFutureSpec
+    extends WhiteFutureSpec
+    with EitherValues
+    with ValidationFuture {
   describe("A Validation") {
-    describe("for Validation with successful") {
+    describe("for Success with successful") {
       val v: Validation[String, FutureResult] =
-        Success(Future.successful(1))
+        Validation.success(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -31,6 +35,33 @@ class ValidationFutureSpec extends WhiteFutureSpec with ValidationFuture {
           i <- v.getOrFailed.transRecover
         } yield {
           i shouldBe Success(1)
+        }
+      }
+    }
+    describe("for Validation with successful") {
+      val v: Validation[String, FutureResult] =
+        Validation.failure(CaseException().message)
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Failure(CaseException().message)
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe 1
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.toEither.left.value shouldBe a[IllegalStateException]
         }
       }
     }

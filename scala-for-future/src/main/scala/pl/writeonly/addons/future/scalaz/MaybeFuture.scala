@@ -21,7 +21,7 @@ trait MaybeFuture extends Types1 with Utils {
   )(implicit ec: EC): FutureValue[A] =
     v match {
       case Just(f: Future[A]) => for (a <- f) yield Maybe.fromNullable(a)
-      case a: Empty[A]        => a |> Future.successful
+      case a: Empty[A]        => Future.successful(a)
     }
 
   override def transRecover[A](

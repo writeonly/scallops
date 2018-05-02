@@ -15,7 +15,7 @@ trait ValidationNelFuture extends Types2 with Utils {
   )(implicit ec: EC): FutureValue[A, B] =
     v match {
       case Success(f: Future[B]) => for (a <- f) yield Validation.success(a)
-      case a: Failure[A]         => a |> Future.successful
+      case a: Failure[A]         => Future.successful(a)
     }
 
   override def getOrFailed[A, B](
