@@ -6,7 +6,7 @@ import pl.writeonly.addons.future.api.{EC, Types1, Utils}
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-object TryFuture extends Types1 with Utils {
+trait TryFuture extends Types1 with Utils {
 
   override type Value[A] = Try[A]
 
@@ -48,3 +48,5 @@ object TryFuture extends Types1 with Utils {
   }
 
 }
+
+object TryFuture extends TryFuture

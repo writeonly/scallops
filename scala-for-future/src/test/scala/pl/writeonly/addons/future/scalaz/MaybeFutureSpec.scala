@@ -2,14 +2,13 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.FutureResult
-import pl.writeonly.addons.future.scalaz.MaybeFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}
 
 import scala.concurrent.Future
 
-class MaybeFutureSpec extends WhiteFutureSpec {
+class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
   describe("A Maybe") {
     describe("for Just with successful") {
       val v: Maybe[FutureResult] = Maybe.just(Future.successful(1))

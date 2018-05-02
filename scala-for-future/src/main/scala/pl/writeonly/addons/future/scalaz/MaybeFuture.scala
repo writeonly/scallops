@@ -7,7 +7,7 @@ import scalaz.Maybe.{Empty, Just}
 
 import scala.concurrent.Future
 
-object MaybeFuture extends Types1 with Utils {
+trait MaybeFuture extends Types1 with Utils {
   override type Value[A] = Maybe[A]
 
   override def getOrFailed[A](v: ValueFuture[A])(implicit ec: EC): Future[A] =
@@ -52,3 +52,5 @@ object MaybeFuture extends Types1 with Utils {
       MaybeFuture.transRecover(v)(ec)
   }
 }
+
+object MaybeFuture extends MaybeFuture

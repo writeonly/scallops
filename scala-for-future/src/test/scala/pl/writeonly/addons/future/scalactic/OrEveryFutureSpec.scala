@@ -1,17 +1,18 @@
 package pl.writeonly.addons.future.scalactic
 
-import cats.data.NonEmptyList
 import org.scalactic._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
-import pl.writeonly.addons.future.scalactic.OrEveryFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OrEveryFutureSpec extends WhiteFutureSpec with EitherValues {
+class OrEveryFutureSpec
+    extends WhiteFutureSpec
+    with EitherValues
+    with OrEveryFuture {
   describe("A Or Every") {
 
     describe("for Good with successful") {

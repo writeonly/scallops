@@ -6,7 +6,7 @@ import scalaz.{Failure, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
 
-object ValidationNelFuture extends Types2 with Utils {
+trait ValidationNelFuture extends Types2 with Utils {
 
   override type Value[A, B] = ValidationNel[A, B]
 
@@ -55,3 +55,5 @@ object ValidationNelFuture extends Types2 with Utils {
   }
 
 }
+
+object ValidationNelFuture extends ValidationNelFuture

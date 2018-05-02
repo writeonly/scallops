@@ -5,7 +5,7 @@ import pl.writeonly.addons.future.api.{EC, Types1, Utils}
 
 import scala.concurrent.Future
 
-object OptFuture extends Types1 with Utils {
+trait OptFuture extends Types1 with Utils {
 
   override type Value[A] = Option[A]
 
@@ -52,3 +52,5 @@ object OptFuture extends Types1 with Utils {
   }
 
 }
+
+object OptFuture extends OptFuture

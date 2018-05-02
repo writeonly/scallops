@@ -3,12 +3,14 @@ package pl.writeonly.addons.future.library
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
-import pl.writeonly.addons.future.library.EitherFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class EitherFutureSpec extends WhiteFutureSpec with EitherValues {
+class EitherFutureSpec
+    extends WhiteFutureSpec
+    with EitherValues
+    with EitherFuture {
   describe("A Either") {
     describe("for Right with successful") {
       val v = Right[String, FutureResult](Future.successful(1))

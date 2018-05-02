@@ -7,7 +7,7 @@ import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 
 import scala.concurrent.Future
 
-object ValidatedFuture extends Types2 with Utils {
+trait ValidatedFuture extends Types2 with Utils {
 
   override type Value[A, B] = Validated[A, B]
 
@@ -56,3 +56,5 @@ object ValidatedFuture extends Types2 with Utils {
   }
 
 }
+
+object ValidatedFuture extends ValidatedFuture

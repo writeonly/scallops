@@ -2,13 +2,12 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
-import pl.writeonly.addons.future.scalaz.ValidationFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
 
-class ValidationFutureSpec extends WhiteFutureSpec {
+class ValidationFutureSpec extends WhiteFutureSpec with ValidationFuture {
   describe("A Validation") {
     describe("for Validation with successful") {
       val v: Validation[String, FutureResult] =

@@ -6,7 +6,7 @@ import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 
 import scala.concurrent.Future
 
-object OrFuture extends Types2 with Utils {
+trait OrFuture extends Types2 with Utils {
 
   override type Value[A, B] = B Or A
 
@@ -51,3 +51,5 @@ object OrFuture extends Types2 with Utils {
   }
 
 }
+
+object OrFuture extends OrFuture

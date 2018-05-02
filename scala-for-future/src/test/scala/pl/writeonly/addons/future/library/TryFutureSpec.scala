@@ -2,13 +2,12 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
-import pl.writeonly.addons.future.library.TryFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class TryFutureSpec extends WhiteFutureSpec {
+class TryFutureSpec extends WhiteFutureSpec with TryFuture {
   describe("A Try") {
     describe("for Success with successful") {
       val v: Try[FutureResult] = Try(Future.successful(1))

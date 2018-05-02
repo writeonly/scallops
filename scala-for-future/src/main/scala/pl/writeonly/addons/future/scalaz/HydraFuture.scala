@@ -7,7 +7,7 @@ import scalaz.{-\/, \/, \/-}
 import scala.concurrent.Future
 import scala.concurrent.Future.{failed, successful}
 
-object HydraFuture extends Types2 with Utils {
+trait HydraFuture extends Types2 with Utils {
   override type Value[A, B] = \/[A, B]
 
   override def getOrFailed[A, B](
@@ -55,3 +55,5 @@ object HydraFuture extends Types2 with Utils {
   }
 
 }
+
+object HydraFuture extends HydraFuture

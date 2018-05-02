@@ -4,12 +4,11 @@ import org.scalactic.{Bad, ErrorMessage, Good, Or}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
-import pl.writeonly.addons.future.scalactic.OrFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OrFutureSpec extends WhiteFutureSpec with EitherValues {
+class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
   describe("A Or") {
 
     describe("for Good with successful") {

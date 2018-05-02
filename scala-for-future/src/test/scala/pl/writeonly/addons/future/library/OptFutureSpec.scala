@@ -2,12 +2,11 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.FutureResult
-import pl.writeonly.addons.future.library.OptFuture._
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OptFutureSpec extends WhiteFutureSpec {
+class OptFutureSpec extends WhiteFutureSpec with OptFuture {
   describe("A Opt") {
     describe("for Some with successful") {
       val v: Option[FutureResult] = Option(Future.successful(1))

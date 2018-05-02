@@ -5,7 +5,7 @@ import pl.writeonly.addons.future.api.{EC, Types2, Utils}
 
 import scala.concurrent.Future
 
-object EitherFuture extends Types2 with Utils {
+trait EitherFuture extends Types2 with Utils {
   override type Value[A, B] = Either[A, B]
 
   override def getOrFailed[A, B](
@@ -53,3 +53,5 @@ object EitherFuture extends Types2 with Utils {
   }
 
 }
+
+object EitherFuture extends EitherFuture
