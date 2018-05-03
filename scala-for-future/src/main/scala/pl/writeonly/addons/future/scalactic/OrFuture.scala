@@ -31,7 +31,7 @@ trait OrFuture extends Types2 with Utils {
   def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
     v.transformAndRecover((s: A) => Good(s), { case t => Bad(t) })
 
-  implicit class OrFutureInSideOut[B, A](v: Future[B] Or A)
+  implicit class OrFutureInSideOut[B, A](v: ValueFuture[A, B])
       extends InSideOut[Value[A, B]] {
     override def inSideOut(implicit ec: EC): FutureValue[A, B] =
       OrFuture.inSideOut(v)(ec)
@@ -46,7 +46,7 @@ trait OrFuture extends Types2 with Utils {
   implicit class OrFutureTransRecover[A](value: Future[A])
       extends TransRecover[Recovered[A]] {
 
-    override def transRecover(implicit ec: EC): Future[A Or Throwable] =
+    override def transRecover(implicit ec: EC): FutureRecovered[A] =
       OrFuture.recover(value)(ec)
   }
 

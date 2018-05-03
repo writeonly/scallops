@@ -1,60 +1,69 @@
 package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
+import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
-import scala.concurrent.Future
-
-class ValidationFutureSpec extends WhiteFutureSpec with ValidationFuture {
+class ValidationFutureSpec
+    extends WhiteFutureSpec
+    with EitherValues
+    with ValidationFuture {
   describe("A Validation") {
-    describe("for Some with successful") {
-      val v: Validation[FutureResult] = Fail(Future.successful(1))
+    describe("for Pass") {
+      val v: Validation[String] = Pass
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Fail(1)
+          i shouldBe null
         }
       }
       ignore("getOrFailed") {
-        for {
-          i <- v.getOrFailed
-        } yield {
-          i shouldBe 1
+        recoverToSucceededIf[NotImplementedError] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe null
+          }
         }
       }
-      ignore("transRecover") {
-        for {
-          i <- v.getOrFailed.transRecover
-        } yield {
-          i shouldBe Fail(1)
+      ignore("getOrFailed and transRecover") {
+        recoverToSucceededIf[NotImplementedError] {
+          for {
+            i <- v.getOrFailed.transRecover
+          } yield {
+            i shouldBe Pass
+          }
         }
       }
     }
-    describe("for Pass") {
-      val v: Validation[FutureResult] = Pass
+    describe("for Fail") {
+      val v: Validation[String] = Fail(CaseException().message)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Pass
+          i shouldBe Fail(CaseException().message)
         }
       }
       ignore("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[NotImplementedError] {
           for {
             i <- v.getOrFailed
-          } yield i
-
+          } yield {
+            i shouldBe CaseException().message
+          }
         }
       }
-      ignore("transRecover") {
-        for {
-          i <- v.getOrFailed.transRecover
-        } yield {
-          i shouldBe Pass
+      ignore("getOrFailed and transRecover") {
+        recoverToSucceededIf[NotImplementedError] {
+          for {
+            i <- v.getOrFailed.transRecover
+          } yield {
+            i shouldBe a[IllegalStateException]
+          }
         }
       }
     }
@@ -73,8 +82,19 @@ class ValidationFutureSpec extends WhiteFutureSpec with ValidationFuture {
           f shouldBe Fail(CaseException())
         }
       }
-    }
+      it("for successful and failed") {
+        for {
+          s <- RemoteService.successful1.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
+          l = List(s, f)
+        } yield {
+          s shouldBe Pass
+          f shouldBe Fail(CaseException())
+          l shouldBe List(Pass, Fail(CaseException()))
+        }
+      }
 
+    }
   }
 
 }
