@@ -10,9 +10,9 @@ trait ValidationFuture extends TypesLeft with Utils {
 
   override type Value[A] = Validation[A]
 
-  override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Nothing] =
+  override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Unit] =
     v match {
-      case Pass    => Future.never
+      case Pass    => Future.unit
       case Fail(f) => f |> toThrowable |> Future.failed
     }
 
@@ -33,8 +33,9 @@ trait ValidationFuture extends TypesLeft with Utils {
       ValidationFuture.inSideOut(v)(ec)
   }
 
-  implicit class OrFutureGetOrFailed[A](v: FutureV[A]) extends GetOrFailed[A] {
-    override def getOrFailed(implicit ec: EC): Future[A] =
+  implicit class OrFutureGetOrFailed[A](v: FutureV[A])
+      extends GetOrFailed[Unit] {
+    override def getOrFailed(implicit ec: EC): Future[Unit] =
       ValidationFuture.getOrFailed(v)(ec)
   }
 

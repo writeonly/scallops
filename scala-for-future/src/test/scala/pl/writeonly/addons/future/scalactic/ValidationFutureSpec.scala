@@ -6,6 +6,8 @@ import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.CaseException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
+import scala.runtime.BoxedUnit
+
 class ValidationFutureSpec
     extends WhiteFutureSpec
     with EitherValues
@@ -20,22 +22,19 @@ class ValidationFutureSpec
           i shouldBe null
         }
       }
-      ignore("getOrFailed") {
-        recoverToSucceededIf[NotImplementedError] {
-          for {
-            i <- v.getOrFailed
-          } yield {
-            i shouldBe null
-          }
+      it("getOrFailed") {
+        for {
+          i <- v.getOrFailed
+        } yield {
+          i shouldBe a[BoxedUnit]
+          i shouldBe ()
         }
       }
-      ignore("getOrFailed and transRecover") {
-        recoverToSucceededIf[NotImplementedError] {
-          for {
-            i <- v.getOrFailed.transRecover
-          } yield {
-            i shouldBe Pass
-          }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i shouldBe Pass
         }
       }
     }
@@ -48,8 +47,8 @@ class ValidationFutureSpec
           i shouldBe Fail(CaseException().message)
         }
       }
-      ignore("getOrFailed") {
-        recoverToSucceededIf[NotImplementedError] {
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -57,13 +56,11 @@ class ValidationFutureSpec
           }
         }
       }
-      ignore("getOrFailed and transRecover") {
-        recoverToSucceededIf[NotImplementedError] {
-          for {
-            i <- v.getOrFailed.transRecover
-          } yield {
-            i shouldBe a[IllegalStateException]
-          }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i shouldBe a[Fail[IllegalStateException]]
         }
       }
     }

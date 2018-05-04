@@ -12,7 +12,7 @@ trait TypesLeft {
 
   def inSideOut[A](v: FutureV[A])(implicit ec: EC): ValueF[A]
 
-  def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Nothing]
+  def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Unit]
 
   def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF
 
