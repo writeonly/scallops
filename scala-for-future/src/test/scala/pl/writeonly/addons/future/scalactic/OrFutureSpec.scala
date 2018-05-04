@@ -3,7 +3,8 @@ package pl.writeonly.addons.future.scalactic
 import org.scalactic.{Bad, ErrorMessage, Good, Or}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -47,7 +48,7 @@ class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield i
@@ -57,7 +58,7 @@ class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[IllegalStateException]
+          i.toEither.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -73,7 +74,7 @@ class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Bad(CaseException())
+          f shouldBe Bad(ClientException())
         }
       }
 

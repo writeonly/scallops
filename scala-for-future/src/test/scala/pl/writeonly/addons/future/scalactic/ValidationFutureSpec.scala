@@ -3,7 +3,8 @@ package pl.writeonly.addons.future.scalactic
 import org.scalactic.{Fail, Pass, Validation}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.CaseException
+import pl.writeonly.addons.future.RemoteService.ClientException
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.runtime.BoxedUnit
@@ -48,7 +49,7 @@ class ValidationFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -60,7 +61,7 @@ class ValidationFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe a[Fail[IllegalStateException]]
+          i shouldBe a[Fail[ToThrowableException]]
         }
       }
     }
@@ -76,7 +77,7 @@ class ValidationFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Fail(CaseException())
+          f shouldBe Fail(ClientException())
         }
       }
       it("for successful and failed") {
@@ -86,8 +87,8 @@ class ValidationFutureSpec
           l = List(s, f)
         } yield {
           s shouldBe Pass
-          f shouldBe Fail(CaseException())
-          l shouldBe List(Pass, Fail(CaseException()))
+          f shouldBe Fail(ClientException())
+          l shouldBe List(Pass, Fail(ClientException()))
         }
       }
 

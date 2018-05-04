@@ -5,9 +5,10 @@ import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.future.cats.ValidatedNelFuture._
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -52,7 +53,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -66,7 +67,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         } yield {
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
-          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head shouldBe a[ToThrowableException]
           i.toEither.left.value.head.getMessage shouldBe RemoteService.InternalServerError
         }
       }
@@ -86,7 +87,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -103,7 +104,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         } yield {
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
-          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head shouldBe a[ToThrowableException]
           i.toEither.left.value.head.getMessage shouldBe NonEmptyList
             .of(RemoteService.NotImplemented, RemoteService.BadGateway)
             .toString
@@ -124,7 +125,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Invalid(NonEmptyList.one(CaseException()))
+          f shouldBe Invalid(NonEmptyList.one(ClientException()))
         }
       }
       it("for successful and failed") {
@@ -136,15 +137,15 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         } yield {
           s shouldBe Valid(1)
           f1 shouldBe Invalid(
-            NonEmptyList.one(CaseException(RemoteService.NotImplemented))
+            NonEmptyList.one(ClientException(RemoteService.NotImplemented))
           )
           f2 shouldBe Invalid(
-            NonEmptyList.one(CaseException(RemoteService.BadGateway))
+            NonEmptyList.one(ClientException(RemoteService.BadGateway))
           )
           p shouldBe Invalid(
             NonEmptyList.of(
-              CaseException(RemoteService.NotImplemented),
-              CaseException(RemoteService.BadGateway)
+              ClientException(RemoteService.NotImplemented),
+              ClientException(RemoteService.BadGateway)
             )
           )
         }

@@ -1,19 +1,18 @@
 package pl.writeonly.addons.ops
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-object OptionOps {
+trait OptionOps {
 
-  implicit class OptionOps[A](opt: Option[A]) {
-    def getOrThrows(exception: => Throwable): A = toTry(exception) match {
-      case s: Success[A] => s.get
-      case f: Failure[A] => f.get
-    }
+  implicit class OptionOps[A](opt: Option[A]) extends ValueOpsLike[A] {
 
-    def toTry(exception: => Throwable): Try[A] =
+    def toTry: Try[A] =
       opt
         .map(Success(_))
-        .getOrElse(Failure(exception))
+        .getOrElse(Failure(toThrowable))
   }
 
 }
+
+object OptionOps extends OptionOps

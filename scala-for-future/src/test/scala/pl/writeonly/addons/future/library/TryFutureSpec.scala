@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -34,9 +34,9 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
       }
     }
     describe("for Success with failed") {
-      val v: Try[FutureResult] = Try(Future.failed(CaseException()))
+      val v: Try[FutureResult] = Try(Future.failed(ClientException()))
       it("inSideOut") {
-        recoverToSucceededIf[CaseException] {
+        recoverToSucceededIf[ClientException] {
           for {
             i <- v.inSideOut
           } yield i
@@ -44,7 +44,7 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[CaseException] {
+        recoverToSucceededIf[ClientException] {
           for {
             i <- v.getOrFailed
           } yield i
@@ -54,21 +54,21 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Failure(CaseException())
+          i shouldBe Failure(ClientException())
         }
       }
     }
     describe("for Failure") {
-      val v: Try[FutureResult] = Failure(CaseException())
+      val v: Try[FutureResult] = Failure(ClientException())
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Failure(CaseException())
+          i shouldBe Failure(ClientException())
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[CaseException] {
+        recoverToSucceededIf[ClientException] {
           for {
             i <- v.getOrFailed
           } yield i
@@ -78,7 +78,7 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Failure(CaseException())
+          i shouldBe Failure(ClientException())
         }
       }
     }
@@ -94,7 +94,7 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
         for {
           fi <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          fi shouldBe Failure(CaseException())
+          fi shouldBe Failure(ClientException())
         }
 
       }

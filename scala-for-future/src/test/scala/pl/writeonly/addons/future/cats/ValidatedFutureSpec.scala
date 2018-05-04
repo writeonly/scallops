@@ -4,8 +4,9 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
 import pl.writeonly.addons.future.cats.ValidatedFuture._
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -48,7 +49,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -60,7 +61,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[IllegalStateException]
+          i.toEither.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -76,7 +77,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Invalid(CaseException())
+          f shouldBe Invalid(ClientException())
         }
       }
       it("for successful and failed") {
@@ -85,7 +86,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
           s shouldBe Valid(1)
-          f shouldBe Invalid(CaseException())
+          f shouldBe Invalid(ClientException())
         }
       }
     }

@@ -13,7 +13,7 @@ trait OrEveryFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Good(f: Future[B]) => f
-      case Bad(f)             => f |> toThrowable |> Future.failed
+      case Bad(f: A)          => f |> toThrowable[A] |> Future.failed
     }
 
   override def inSideOut[A, B](

@@ -2,6 +2,7 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.FutureResult
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -42,7 +43,7 @@ class OptFutureSpec extends WhiteFutureSpec with OptFuture {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield i

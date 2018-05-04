@@ -2,6 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesRight, Utils}
+import pl.writeonly.addons.ops.ToThrowableException.ToThrowable0Exception
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}
 
@@ -13,7 +14,7 @@ trait MaybeFuture extends TypesRight with Utils {
   override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[A] =
     v match {
       case Just(f: Future[A]) => f
-      case Empty()            => new IllegalStateException() |> Future.failed
+      case Empty()            => ToThrowable0Exception() |> Future.failed
     }
 
   override def inSideOut[A](v: FutureV[A])(implicit ec: EC): ValueF[A] =

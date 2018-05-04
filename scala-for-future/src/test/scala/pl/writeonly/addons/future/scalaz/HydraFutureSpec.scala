@@ -2,7 +2,8 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{-\/, \/, \/-}
 
@@ -47,7 +48,7 @@ class HydraFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -60,7 +61,7 @@ class HydraFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[IllegalStateException]
+          i.toEither.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -76,7 +77,7 @@ class HydraFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe -\/(CaseException())
+          f shouldBe -\/(ClientException())
         }
       }
     }

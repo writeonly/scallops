@@ -24,8 +24,9 @@ trait ValidatedNelFuture extends TypesBoth with Utils {
     v match {
       case Valid(f: Future[B]) => f
       case a: Invalid[NonEmptyList[A]] if a.e.size === 1 =>
-        a.e.head |> toThrowable |> Future.failed
-      case a: Invalid[NonEmptyList[A]] => a.e |> toThrowable |> Future.failed
+        a.e.head |> toThrowable[A] |> Future.failed
+      case a: Invalid[NonEmptyList[A]] =>
+        a.e |> toThrowable[NonEmptyList[A]] |> Future.failed
     }
 
   override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =

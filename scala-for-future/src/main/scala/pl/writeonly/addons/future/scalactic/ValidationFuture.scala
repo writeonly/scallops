@@ -12,8 +12,8 @@ trait ValidationFuture extends TypesLeft with Utils {
 
   override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Unit] =
     v match {
-      case Pass    => Future.unit
-      case Fail(f) => f |> toThrowable |> Future.failed
+      case Pass       => Future.unit
+      case Fail(f: A) => f |> toThrowable[A] |> Future.failed
     }
 
   override def inSideOut[A](v: FutureV[A])(implicit ec: EC): ValueF[A] =

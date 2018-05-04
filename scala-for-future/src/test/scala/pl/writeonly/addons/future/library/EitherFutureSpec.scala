@@ -2,7 +2,8 @@ package pl.writeonly.addons.future.library
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -46,7 +47,7 @@ class EitherFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -58,7 +59,7 @@ class EitherFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.left.value shouldBe a[IllegalStateException]
+          i.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -74,7 +75,7 @@ class EitherFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Left(CaseException())
+          f shouldBe Left(ClientException())
         }
       }
       it("for successful and failed") {
@@ -84,8 +85,8 @@ class EitherFutureSpec
           l = List(s, f)
         } yield {
           s shouldBe Right(1)
-          f shouldBe Left(CaseException())
-          l shouldBe List(Right(1), Left(CaseException()))
+          f shouldBe Left(ClientException())
+          l shouldBe List(Right(1), Left(ClientException()))
         }
       }
 

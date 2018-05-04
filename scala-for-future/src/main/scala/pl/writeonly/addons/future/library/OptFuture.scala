@@ -2,6 +2,7 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesRight, Utils}
+import pl.writeonly.addons.ops.ToThrowableException.ToThrowable0Exception
 
 import scala.concurrent.Future
 
@@ -12,7 +13,7 @@ trait OptFuture extends TypesRight with Utils {
   override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[A] =
     v match {
       case Some(f: Future[A]) => f
-      case None               => new IllegalStateException() |> Future.failed
+      case None               => ToThrowable0Exception() |> Future.failed
     }
 
   override def inSideOut[A](v: FutureV[A])(implicit ec: EC): ValueF[A] =

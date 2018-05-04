@@ -13,7 +13,7 @@ trait HydraFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case \/-(f: Future[B]) => f
-      case -\/(f)            => f |> toThrowable |> failed
+      case -\/(f: A)         => f |> toThrowable[A] |> failed
     }
 
   override def inSideOut[A, B](

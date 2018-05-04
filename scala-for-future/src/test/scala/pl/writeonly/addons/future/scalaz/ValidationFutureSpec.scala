@@ -2,7 +2,8 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, Success, Validation}
 
@@ -49,7 +50,7 @@ class ValidationFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -61,7 +62,7 @@ class ValidationFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[IllegalStateException]
+          i.toEither.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -77,7 +78,7 @@ class ValidationFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Failure(CaseException())
+          f shouldBe Failure(ClientException())
         }
       }
     }

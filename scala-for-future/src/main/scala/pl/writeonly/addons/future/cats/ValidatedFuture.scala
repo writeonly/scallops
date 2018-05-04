@@ -22,7 +22,7 @@ trait ValidatedFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Valid(f: Future[B]) => f
-      case a: Invalid[A]       => a |> toThrowable |> Future.failed
+      case a: Invalid[A]       => a |> toThrowable[Invalid[A]] |> Future.failed
     }
 
   override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =

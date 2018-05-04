@@ -2,6 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.FutureResult
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}
@@ -44,7 +45,7 @@ class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield i

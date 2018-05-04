@@ -3,8 +3,9 @@ package pl.writeonly.addons.future.scalactic
 import org.scalactic._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -51,7 +52,7 @@ class OrEveryFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -65,7 +66,7 @@ class OrEveryFutureSpec
         } yield {
           i.toEither.left.value shouldBe a[One[Throwable]]
           i.toEither.left.value should have size 1
-          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head shouldBe a[ToThrowableException]
         }
       }
     }
@@ -81,7 +82,7 @@ class OrEveryFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Bad(One(CaseException()))
+          f shouldBe Bad(One(ClientException()))
         }
       }
       describe("for successful and failed") {
@@ -94,12 +95,12 @@ class OrEveryFutureSpec
             p = Accumulation.withGood(s, f1, f2) { RemoteTuple3(_, _, _) }
           } yield {
             s shouldBe Good(1)
-            f1 shouldBe Bad(One(CaseException(RemoteService.NotImplemented)))
-            f2 shouldBe Bad(One(CaseException(RemoteService.BadGateway)))
+            f1 shouldBe Bad(One(ClientException(RemoteService.NotImplemented)))
+            f2 shouldBe Bad(One(ClientException(RemoteService.BadGateway)))
             p shouldBe Bad(
               Many(
-                CaseException(RemoteService.NotImplemented),
-                CaseException(RemoteService.BadGateway)
+                ClientException(RemoteService.NotImplemented),
+                ClientException(RemoteService.BadGateway)
               )
             )
           }
@@ -112,12 +113,12 @@ class OrEveryFutureSpec
             p = List(s, f1, f2).combined
           } yield {
             s shouldBe Good(1)
-            f1 shouldBe Bad(One(CaseException(RemoteService.NotImplemented)))
-            f2 shouldBe Bad(One(CaseException(RemoteService.BadGateway)))
+            f1 shouldBe Bad(One(ClientException(RemoteService.NotImplemented)))
+            f2 shouldBe Bad(One(ClientException(RemoteService.BadGateway)))
             p shouldBe Bad(
               Many(
-                CaseException(RemoteService.NotImplemented),
-                CaseException(RemoteService.BadGateway)
+                ClientException(RemoteService.NotImplemented),
+                ClientException(RemoteService.BadGateway)
               )
             )
           }

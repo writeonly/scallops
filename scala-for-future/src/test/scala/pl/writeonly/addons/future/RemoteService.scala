@@ -20,9 +20,10 @@ object RemoteService {
   def failed3ServiceUnavailable: FutureResult = ServiceUnavailable |> failed
   def failed4GatewayTimeout: FutureResult = GatewayTimeout |> failed
 
-  def failed(message: String) = Future.failed(CaseException(message))
+  def failed(message: String): Future[Nothing] =
+    Future.failed(ClientException(message))
 
-  final case class CaseException(val message: String = InternalServerError)
-      extends Exception(message)
+  final case class ClientException(message: String = InternalServerError)
+      extends RuntimeException(message)
 
 }

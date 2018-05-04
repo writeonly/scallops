@@ -2,7 +2,8 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{CaseException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
@@ -49,7 +50,7 @@ class ValidationNelFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -63,7 +64,7 @@ class ValidationNelFutureSpec
         } yield {
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
-          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head shouldBe a[ToThrowableException]
           i.toEither.left.value.head.getMessage shouldBe RemoteService.InternalServerError
         }
       }
@@ -82,7 +83,7 @@ class ValidationNelFutureSpec
         }
       }
       it("getOrFailed") {
-        recoverToSucceededIf[IllegalStateException] {
+        recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
           } yield {
@@ -96,7 +97,7 @@ class ValidationNelFutureSpec
         } yield {
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
-          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head shouldBe a[ToThrowableException]
           i.toEither.left.value.head.getMessage shouldBe NonEmptyList(
             RemoteService.NotImplemented,
             RemoteService.BadGateway
@@ -116,7 +117,7 @@ class ValidationNelFutureSpec
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Failure(NonEmptyList(CaseException()))
+          f shouldBe Failure(NonEmptyList(ClientException()))
         }
       }
       it("for successful and failed") {
@@ -129,15 +130,15 @@ class ValidationNelFutureSpec
         } yield {
           s shouldBe Success(1)
           f1 shouldBe Failure(
-            NonEmptyList(CaseException(RemoteService.NotImplemented))
+            NonEmptyList(ClientException(RemoteService.NotImplemented))
           )
           f2 shouldBe Failure(
-            NonEmptyList(CaseException(RemoteService.BadGateway))
+            NonEmptyList(ClientException(RemoteService.BadGateway))
           )
           p shouldBe Failure(
             NonEmptyList(
-              CaseException(RemoteService.NotImplemented),
-              CaseException(RemoteService.BadGateway)
+              ClientException(RemoteService.NotImplemented),
+              ClientException(RemoteService.BadGateway)
             )
           )
         }
