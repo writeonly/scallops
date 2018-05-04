@@ -38,12 +38,12 @@ class HydraFutureSpec
       }
     }
     describe("for Left") {
-      val v: String \/ FutureResult = -\/(CaseException().message)
+      val v: String \/ FutureResult = -\/(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe -\/(CaseException().message)
+          i shouldBe -\/(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {

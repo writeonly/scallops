@@ -37,12 +37,12 @@ class EitherFutureSpec
       }
     }
     describe("for Left with successful") {
-      val v = Left[String, FutureResult](CaseException().message)
+      val v = Left[String, FutureResult](RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Left(CaseException().message)
+          i shouldBe Left(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
@@ -50,7 +50,7 @@ class EitherFutureSpec
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe CaseException().message
+            i shouldBe RemoteService.InternalServerError
           }
         }
       }

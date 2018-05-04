@@ -2,7 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesBoth, Utils}
-import scalaz.{Failure, Success, Validation, ValidationNel}
+import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
 
@@ -21,7 +21,9 @@ trait ValidationNelFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Success(f: Future[B]) => f
-      case a: Failure[A]         => a |> toThrowable |> Future.failed
+      case a: Failure[NonEmptyList[A]] if a.e.size == 1 =>
+        a.e.head |> toThrowable |> Future.failed
+      case a: Failure[NonEmptyList[A]] => a.e |> toThrowable |> Future.failed
     }
 
   override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =

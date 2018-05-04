@@ -8,7 +8,7 @@ import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
 
-class Validation0FutureSpec
+class ValidationFutureSpec
     extends WhiteFutureSpec
     with EitherValues
     with ValidationFuture {
@@ -40,12 +40,12 @@ class Validation0FutureSpec
     }
     describe("for Validation with successful") {
       val v: Validation[String, FutureResult] =
-        Validation.failure(CaseException().message)
+        Validation.failure(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Failure(CaseException().message)
+          i shouldBe Failure(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {

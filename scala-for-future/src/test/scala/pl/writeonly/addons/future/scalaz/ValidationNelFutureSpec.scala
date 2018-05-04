@@ -40,12 +40,12 @@ class ValidationNelFutureSpec
     }
     describe("for FailureNel") {
       val v: ValidationNel[String, FutureResult] =
-        Validation.failureNel(CaseException().message)
+        Validation.failureNel(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Failure(NonEmptyList(CaseException().message))
+          i shouldBe Failure(NonEmptyList(RemoteService.InternalServerError))
         }
       }
       it("getOrFailed") {
@@ -64,6 +64,43 @@ class ValidationNelFutureSpec
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
           i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head.getMessage shouldBe RemoteService.InternalServerError
+        }
+      }
+    }
+    describe("for double FailureNel") {
+      val v: ValidationNel[String, FutureResult] = Failure(
+        NonEmptyList(RemoteService.NotImplemented, RemoteService.BadGateway)
+      )
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Failure(
+            NonEmptyList(RemoteService.NotImplemented, RemoteService.BadGateway)
+          )
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe 1
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
+          i.toEither.left.value should have size 1
+          i.toEither.left.value.head shouldBe a[IllegalStateException]
+          i.toEither.left.value.head.getMessage shouldBe NonEmptyList(
+            RemoteService.NotImplemented,
+            RemoteService.BadGateway
+          ).toString
         }
       }
     }

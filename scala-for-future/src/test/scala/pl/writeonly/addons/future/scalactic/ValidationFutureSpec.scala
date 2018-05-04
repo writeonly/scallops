@@ -39,12 +39,12 @@ class ValidationFutureSpec
       }
     }
     describe("for Fail") {
-      val v: Validation[String] = Fail(CaseException().message)
+      val v: Validation[String] = Fail(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Fail(CaseException().message)
+          i shouldBe Fail(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
@@ -52,7 +52,7 @@ class ValidationFutureSpec
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe CaseException().message
+            i shouldBe RemoteService.InternalServerError
           }
         }
       }

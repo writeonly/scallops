@@ -42,12 +42,12 @@ class OrEveryFutureSpec
     }
     describe("for Bad") {
       val v: FutureResult Or Every[ErrorMessage] =
-        Bad(One(CaseException().message))
+        Bad(One(RemoteService.InternalServerError))
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Bad(One(CaseException().message))
+          i shouldBe Bad(One(RemoteService.InternalServerError))
         }
       }
       it("getOrFailed") {

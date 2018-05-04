@@ -38,12 +38,12 @@ class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
     }
     describe("for Bad") {
       val v: FutureResult Or ErrorMessage =
-        Bad(CaseException().message)
+        Bad(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Bad(CaseException().message)
+          i shouldBe Bad(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {

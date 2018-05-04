@@ -39,12 +39,12 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
     }
     describe("for Invalid") {
       val v: Validated[String, FutureResult] =
-        Validated.invalid(CaseException().message)
+        Validated.invalid(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Invalid(CaseException().message)
+          i shouldBe Invalid(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
@@ -52,7 +52,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe CaseException().message
+            i shouldBe RemoteService.InternalServerError
           }
         }
       }
