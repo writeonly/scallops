@@ -7,9 +7,7 @@ import scala.concurrent.Future
 
 object SeqFuture {
   def inSideOut[A](v: Seq[Future[A]])(implicit ec: EC): Future[Seq[A]] =
-    Future
-      .successful(v)
-      .flatMap(Future.sequence(_))
+    Future.sequence(v)
 
   implicit class SeqFutureInSideOut[A](v: Seq[Future[A]])
       extends InSideOut[Seq[A]] {

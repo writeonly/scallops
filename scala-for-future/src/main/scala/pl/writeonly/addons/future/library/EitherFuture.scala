@@ -1,30 +1,28 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
-import pl.writeonly.addons.future.api.{EC, Types2, Utils}
+import pl.writeonly.addons.future.api.{EC, TypesBoth, Utils}
 
 import scala.concurrent.Future
 
-trait EitherFuture extends Types2 with Utils {
+trait EitherFuture extends TypesBoth with Utils {
   override type Value[A, B] = Either[A, B]
 
-  override def getOrFailed[A, B](
-    v: ValueFuture[A, B]
-  )(implicit ec: EC): Future[B] =
+  override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Right(f: Future[B]) => f
       case Left(f)             => f |> toThrowable |> Future.failed
     }
 
   override def inSideOut[A, B](
-    v: ValueFuture[A, B]
-  )(implicit ec: EC): FutureValue[A, B] =
+    v: FutureV[A, B]
+  )(implicit ec: EC): ValueF[A, B] =
     v match {
       case Right(f: Future[B]) => for (a <- f) yield Right(a)
       case a: Left[A, B]       => a |> Future.successful
     }
 
-  override def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered[A] =
+  override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
     v.transformAndRecover((s: A) => Right(s), { case t => Left(t) })
 
   //    value.transform({
@@ -32,13 +30,13 @@ trait EitherFuture extends Types2 with Utils {
   //      case Failure(t) => Success(Left(t))
   //    })
 
-  implicit class EitherFutureInSideOut[A, B](v: ValueFuture[A, B])
+  implicit class EitherFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
-    override def inSideOut(implicit ec: EC): FutureValue[A, B] =
+    override def inSideOut(implicit ec: EC): ValueF[A, B] =
       EitherFuture.inSideOut(v)(ec)
   }
 
-  implicit class EitherFutureGetOrFailed[A, B](value: ValueFuture[A, B])
+  implicit class EitherFutureGetOrFailed[A, B](value: FutureV[A, B])
       extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       EitherFuture.getOrFailed(value)(ec)
@@ -47,8 +45,8 @@ trait EitherFuture extends Types2 with Utils {
   implicit class EitherFutureTransRecover[A](value: Future[A])
       extends TransRecover[Recovered[A]] {
 
-    override def transRecover(implicit ec: EC): FutureRecovered[A] =
-      EitherFuture.recover(value)(ec)
+    override def transRecover(implicit ec: EC): RecoveredF[A] =
+      EitherFuture.transRecover(value)(ec)
 
   }
 

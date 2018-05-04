@@ -2,20 +2,21 @@ package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
-import pl.writeonly.addons.future.api.{EC, Types0, Utils}
+import pl.writeonly.addons.future.api.{EC, TypesLeft, Utils}
 
 import scala.concurrent.Future
 
-trait ValidationFuture extends Types0 with Utils {
+trait ValidationFuture extends TypesLeft with Utils {
 
   override type Value[A] = Validation[A]
 
-  override def getOrFailed[A](v: ValueFuture[A])(implicit ec: EC): Future[A] =
-    ???
+  override def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Nothing] =
+    v match {
+      case Pass    => Future.never
+      case Fail(f) => f |> toThrowable |> Future.failed
+    }
 
-  override def inSideOut[A](
-    v: ValueFuture[A]
-  )(implicit ec: EC): FutureValue[A] =
+  override def inSideOut[A](v: FutureV[A])(implicit ec: EC): ValueF[A] =
     v match {
       case Pass        => Future.successful(null)
       case a @ Fail(_) => a |> Future.successful
@@ -23,17 +24,16 @@ trait ValidationFuture extends Types0 with Utils {
 
 //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
-  def recover[A](v: Future[A])(implicit ec: EC): FutureRecovered =
+  def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF =
     v.transformAndRecover(_ => Pass, { case t => Fail(t) })
 
-  implicit class OrFutureInSideOut[A](v: ValueFuture[A])
+  implicit class OrFutureInSideOut[A](v: FutureV[A])
       extends InSideOut[Value[A]] {
-    override def inSideOut(implicit ec: EC): FutureValue[A] =
+    override def inSideOut(implicit ec: EC): ValueF[A] =
       ValidationFuture.inSideOut(v)(ec)
   }
 
-  implicit class OrFutureGetOrFailed[A](v: ValueFuture[A])
-      extends GetOrFailed[A] {
+  implicit class OrFutureGetOrFailed[A](v: FutureV[A]) extends GetOrFailed[A] {
     override def getOrFailed(implicit ec: EC): Future[A] =
       ValidationFuture.getOrFailed(v)(ec)
   }
@@ -41,8 +41,8 @@ trait ValidationFuture extends Types0 with Utils {
   implicit class OrFutureTransRecover[A](value: Future[A])
       extends TransRecover[Recovered] {
 
-    override def transRecover(implicit ec: EC): FutureRecovered =
-      ValidationFuture.recover(value)(ec)
+    override def transRecover(implicit ec: EC): RecoveredF =
+      ValidationFuture.transRecover(value)(ec)
   }
 
 }

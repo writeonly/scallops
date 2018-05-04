@@ -1,32 +1,30 @@
 package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
-import pl.writeonly.addons.future.api.{EC, Types2, Utils}
+import pl.writeonly.addons.future.api.{EC, TypesBoth, Utils}
 import scalaz.{Failure, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
 
-trait ValidationNelFuture extends Types2 with Utils {
+trait ValidationNelFuture extends TypesBoth with Utils {
 
   override type Value[A, B] = ValidationNel[A, B]
 
   override def inSideOut[A, B](
-    v: ValueFuture[A, B]
-  )(implicit ec: EC): FutureValue[A, B] =
+    v: FutureV[A, B]
+  )(implicit ec: EC): ValueF[A, B] =
     v match {
       case Success(f: Future[B]) => for (a <- f) yield Validation.success(a)
       case a: Failure[A]         => Future.successful(a)
     }
 
-  override def getOrFailed[A, B](
-    v: ValueFuture[A, B]
-  )(implicit ec: EC): Future[B] =
+  override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Success(f: Future[B]) => f
       case a: Failure[A]         => a |> toThrowable |> Future.failed
     }
 
-  override def recover[B](v: Future[B])(implicit ec: EC): FutureRecovered[B] =
+  override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =
     v.transformAndRecover((s: B) => Success(s), {
       case t => Validation.failureNel(t)
     })
@@ -36,13 +34,13 @@ trait ValidationNelFuture extends Types2 with Utils {
   //      case Failure(t) => Success(Bad(t))
   //    })
 
-  implicit class SuccessFutureInSideOut[A, B](v: ValueFuture[A, B])
+  implicit class SuccessFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
-    override def inSideOut(implicit ec: EC): FutureValue[A, B] =
+    override def inSideOut(implicit ec: EC): ValueF[A, B] =
       ValidationNelFuture.inSideOut(v)(ec)
   }
 
-  implicit class SuccessFutureGetOrFailed[A, B](v: ValueFuture[A, B])
+  implicit class SuccessFutureGetOrFailed[A, B](v: FutureV[A, B])
       extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       ValidationNelFuture.getOrFailed(v)(ec)
@@ -50,8 +48,8 @@ trait ValidationNelFuture extends Types2 with Utils {
 
   implicit class SuccessFutureTransRecover[B](v: Future[B])
       extends TransRecover[Recovered[B]] {
-    override def transRecover(implicit ec: EC): FutureRecovered[B] =
-      ValidationNelFuture.recover(v)(ec)
+    override def transRecover(implicit ec: EC): RecoveredF[B] =
+      ValidationNelFuture.transRecover(v)(ec)
   }
 
 }
