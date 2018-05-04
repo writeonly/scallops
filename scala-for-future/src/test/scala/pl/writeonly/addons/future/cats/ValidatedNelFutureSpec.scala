@@ -39,7 +39,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         }
       }
     }
-    describe("for Invalid") {
+    describe("for Invalid ") {
       val v: ValidatedNel[String, FutureResult] =
         Validated.invalidNel(CaseException().message)
       it("inSideOut") {
@@ -68,6 +68,43 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         }
       }
     }
+    describe("for double Invalid ") {
+      val v: ValidatedNel[String, FutureResult] = Validated.Invalid(
+        NonEmptyList.of(RemoteService.NotImplemented, RemoteService.BadGateway)
+      )
+      it("inSideOut") {
+        for {
+          i <- v.inSideOut
+        } yield {
+          i shouldBe Invalid(
+            NonEmptyList
+              .of(RemoteService.NotImplemented, RemoteService.BadGateway)
+          )
+        }
+      }
+      it("getOrFailed") {
+        recoverToSucceededIf[IllegalStateException] {
+          for {
+            i <- v.getOrFailed
+          } yield {
+            i shouldBe NonEmptyList.of(
+              RemoteService.NotImplemented,
+              RemoteService.BadGateway
+            )
+          }
+        }
+      }
+      it("getOrFailed and transRecover") {
+        for {
+          i <- v.getOrFailed.transRecover
+        } yield {
+          i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
+          i.toEither.left.value should have size 1
+          i.toEither.left.value.head shouldBe a[IllegalStateException]
+        }
+      }
+
+    }
 
     describe("transRecover") {
       it("for successful") {
@@ -81,7 +118,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Invalid(NonEmptyList(CaseException(), List.empty))
+          f shouldBe Invalid(NonEmptyList.one(CaseException()))
         }
       }
       it("for successful and failed") {
