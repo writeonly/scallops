@@ -1,9 +1,8 @@
 package pl.writeonly.addons.ops
 
-import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-trait OptionOps {
+trait OptOps {
 
   implicit class OptionOps[A](opt: Option[A]) extends ValueOpsLike[A] {
 
@@ -15,4 +14,4 @@ trait OptionOps {
 
 }
 
-object OptionOps extends OptionOps
+object OptOps extends OptOps

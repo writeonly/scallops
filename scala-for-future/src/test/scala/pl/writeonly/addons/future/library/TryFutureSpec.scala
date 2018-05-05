@@ -1,14 +1,31 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
+import pl.writeonly.addons.future.RemoteService.{
+  ClientException,
+  Result,
+  ResultF
+}
+import pl.writeonly.addons.ops.TryOps
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class TryFutureSpec extends WhiteFutureSpec with TryFuture {
+class TryFutureSpec extends WhiteFutureSpec with TryFuture with TryOps {
   describe("A Try") {
+
+    describe("for Success") {
+      val v: Try[Result] = Try[Result](1)
+      it("toFuture and getOrFailed") {
+        for {
+          r <- v.toFuture.transRecover
+        } yield {
+          r shouldBe v
+        }
+      }
+    }
+
     describe("for Success with successful") {
       val v: Try[ResultF] = Try(Future.successful(1))
       it("inSideOut") {

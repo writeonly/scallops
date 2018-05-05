@@ -1,14 +1,25 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.ResultF
-import pl.writeonly.addons.ops.ToThrowableException
+import pl.writeonly.addons.future.RemoteService.{Result, ResultF}
+import pl.writeonly.addons.ops.{OptOps, ToThrowableException}
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OptFutureSpec extends WhiteFutureSpec with OptFuture {
+class OptFutureSpec extends WhiteFutureSpec with OptFuture with OptOps {
   describe("A Opt") {
+
+    describe("for Some") {
+      val v: Option[Result] = Option[Result](1)
+      it("toFuture and getOrFailed") {
+        for {
+          r <- v.toFuture.transRecover
+        } yield {
+          r shouldBe v
+        }
+      }
+    }
     describe("for Some with successful") {
       val v: Option[ResultF] = Option(Future.successful(1))
       it("inSideOut") {
