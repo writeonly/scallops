@@ -2,17 +2,14 @@ package pl.writeonly.addons.future.cats
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.ops.ToThrowableException
-import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
 class ValidatedFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
+    extends WhiteFutureSpecWithEither
     with ValidatedFuture {
   describe("A Validated") {
     describe("for Valid with successful") {

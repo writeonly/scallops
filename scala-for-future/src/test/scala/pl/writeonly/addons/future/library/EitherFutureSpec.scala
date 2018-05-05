@@ -1,21 +1,16 @@
 package pl.writeonly.addons.future.library
 
-import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{
   ClientException,
   Result,
   ResultF
 }
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.ops.ToThrowableException
-import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class EitherFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
-    with EitherFuture {
+class EitherFutureSpec extends WhiteFutureSpecWithEither with EitherFuture {
   describe("A Either") {
 
     describe("for Right") {

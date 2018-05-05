@@ -1,17 +1,14 @@
 package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
-import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.ClientException
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.ops.ToThrowableException
-import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.runtime.BoxedUnit
 
 class ValidationFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
+    extends WhiteFutureSpecWithEither
     with ValidationFuture {
   describe("A Validation") {
     describe("for Pass") {

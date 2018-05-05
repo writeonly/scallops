@@ -2,7 +2,7 @@ package pl.writeonly.addons.future.scalactic
 
 import org.scalactic._
 import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.ops.ToThrowableException
@@ -10,10 +10,7 @@ import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class OrEveryFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
-    with OrEveryFuture {
+class OrEveryFutureSpec extends WhiteFutureSpecWithEither with OrEveryFuture {
   describe("A Or Every") {
 
     describe("for Good with successful") {

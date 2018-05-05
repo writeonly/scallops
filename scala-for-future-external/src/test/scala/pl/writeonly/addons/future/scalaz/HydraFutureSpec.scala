@@ -1,18 +1,13 @@
 package pl.writeonly.addons.future.scalaz
 
-import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.ops.ToThrowableException
-import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
 
-class HydraFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
-    with HydraFuture {
+class HydraFutureSpec extends WhiteFutureSpecWithEither with HydraFuture {
   describe("A Hydra ") {
     describe("for Right with successful") {
       val v: String \/ ResultF = \/-[ResultF](Future.successful(1))

@@ -1,17 +1,14 @@
 package pl.writeonly.addons.future.scalaz
 
-import org.scalatest.EitherValues
-import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
+import pl.writeonly.addons.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.addons.ops.ToThrowableException
-import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
 
 class ValidationNelFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
+    extends WhiteFutureSpecWithEither
     with ValidationNelFuture {
   describe("A ValidationNel") {
     describe("for Success with successful") {
