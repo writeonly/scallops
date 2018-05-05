@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future.scalactic
+package pl.writeonly.addons.dependency.scalactic
 
 import org.scalactic.{Bad, Good, Or}
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}

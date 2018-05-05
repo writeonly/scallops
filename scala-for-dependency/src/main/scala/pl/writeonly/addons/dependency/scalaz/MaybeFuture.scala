@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future.scalaz
+package pl.writeonly.addons.dependency.scalaz
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesRight, Utils}

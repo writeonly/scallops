@@ -60,8 +60,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scalaaddons = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, future)
-  .dependsOn(specs, ops, pipe, future)
+  .aggregate(specs, ops, pipe, future, dependency)
+  .dependsOn(specs, ops, pipe, future, dependency)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaaddons",
@@ -74,6 +74,22 @@ lazy val scalaaddons = (project in file("."))
       libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
       )
+  )
+
+lazy val dependency = (project in file("scala-for-dependency"))
+  .dependsOn(specs, pipe, ops, future)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-for-dependency",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+      "org.scalactic" %% "scalactic" % ScalaticVersion,
+      "org.typelevel" %% "cats-core" % "1.1.0",
+      "org.scalaz" %% "scalaz-core" % "7.2.22"
+    )
   )
 
 lazy val future = (project in file("scala-for-future"))

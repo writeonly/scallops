@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future.scalaz
+package pl.writeonly.addons.dependency.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService

@@ -1,4 +1,4 @@
-package pl.writeonly.addons.future.cats
+package pl.writeonly.addons.dependency.cats
 
 import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, Validated, ValidatedNel}
@@ -7,13 +7,15 @@ import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
-import pl.writeonly.addons.future.cats.ValidatedNelFuture._
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
+class ValidatedNelFutureSpec
+    extends WhiteFutureSpec
+    with EitherValues
+    with ValidatedNelFuture {
   describe("A ValidatedNel") {
     describe("for Valid with successful") {
       val v: ValidatedNel[String, ResultF] =
