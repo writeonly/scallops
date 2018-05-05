@@ -60,8 +60,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scalaaddons = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, future, dependency)
-  .dependsOn(specs, ops, pipe, future, dependency)
+  .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal)
+  .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaaddons",
@@ -76,11 +76,11 @@ lazy val scalaaddons = (project in file("."))
       )
   )
 
-lazy val dependency = (project in file("scala-for-dependency"))
-  .dependsOn(specs, pipe, ops, future)
+lazy val futureExternal = (project in file("scala-for-future-external"))
+  .dependsOn(specs, pipe, ops, futureSpecs, future)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "scala-for-dependency",
+    name := "scala-for-future-external",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
@@ -93,7 +93,7 @@ lazy val dependency = (project in file("scala-for-dependency"))
   )
 
 lazy val future = (project in file("scala-for-future"))
-  .dependsOn(specs, pipe, ops)
+  .dependsOn(specs, pipe, ops, futureSpecs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scala-for-future",
@@ -102,10 +102,20 @@ lazy val future = (project in file("scala-for-future"))
     whiteSetting, graySetting, blackSetting,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      "org.scalactic" %% "scalactic" % ScalaticVersion,
-      "org.typelevel" %% "cats-core" % "1.1.0",
-      "org.scalaz" %% "scalaz-core" % "7.2.22"
     )
+  )
+
+lazy val futureSpecs = (project in file("scala-for-future-specs"))
+  .dependsOn(specs, pipe, ops)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-for-future-specs",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+  )
   )
 
 lazy val ops = (project in file("scala-ops"))
