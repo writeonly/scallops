@@ -1,30 +1,27 @@
-package pl.writeonly.addons.dependency.cats
+package pl.writeonly.addons.future.scalaz
 
-import cats.data.Validated.{Invalid, Valid}
-import cats.data.{NonEmptyList, Validated, ValidatedNel}
-import cats.implicits._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
-import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
+import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
 
-class ValidatedNelFutureSpec
+class ValidationNelFutureSpec
     extends WhiteFutureSpec
     with EitherValues
-    with ValidatedNelFuture {
-  describe("A ValidatedNel") {
-    describe("for Valid with successful") {
-      val v: ValidatedNel[String, ResultF] =
-        Validated.validNel(Future.successful(1))
+    with ValidationNelFuture {
+  describe("A ValidationNel") {
+    describe("for Success with successful") {
+      val v: ValidationNel[String, ResultF] =
+        Validation.success(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Valid(1)
+          i shouldBe Success(1)
         }
       }
       it("getOrFailed") {
@@ -38,20 +35,18 @@ class ValidatedNelFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Valid(1)
+          i shouldBe Success(1)
         }
       }
     }
-    describe("for Invalid ") {
-      val v: ValidatedNel[String, ResultF] =
-        Validated.invalidNel(RemoteService.InternalServerError)
+    describe("for FailureNel") {
+      val v: ValidationNel[String, ResultF] =
+        Validation.failureNel(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Invalid(
-            NonEmptyList.one(RemoteService.InternalServerError)
-          )
+          i shouldBe Failure(NonEmptyList(RemoteService.InternalServerError))
         }
       }
       it("getOrFailed") {
@@ -59,7 +54,7 @@ class ValidatedNelFutureSpec
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe NonEmptyList.one(RemoteService.InternalServerError)
+            i shouldBe 1
           }
         }
       }
@@ -74,17 +69,16 @@ class ValidatedNelFutureSpec
         }
       }
     }
-    describe("for double Invalid ") {
-      val v: ValidatedNel[String, ResultF] = Validated.Invalid(
-        NonEmptyList.of(RemoteService.NotImplemented, RemoteService.BadGateway)
+    describe("for double FailureNel") {
+      val v: ValidationNel[String, ResultF] = Failure(
+        NonEmptyList(RemoteService.NotImplemented, RemoteService.BadGateway)
       )
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Invalid(
-            NonEmptyList
-              .of(RemoteService.NotImplemented, RemoteService.BadGateway)
+          i shouldBe Failure(
+            NonEmptyList(RemoteService.NotImplemented, RemoteService.BadGateway)
           )
         }
       }
@@ -93,10 +87,7 @@ class ValidatedNelFutureSpec
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe NonEmptyList.of(
-              RemoteService.NotImplemented,
-              RemoteService.BadGateway
-            )
+            i shouldBe 1
           }
         }
       }
@@ -107,45 +98,45 @@ class ValidatedNelFutureSpec
           i.toEither.left.value shouldBe a[NonEmptyList[Throwable]]
           i.toEither.left.value should have size 1
           i.toEither.left.value.head shouldBe a[ToThrowableException]
-          i.toEither.left.value.head.getMessage shouldBe NonEmptyList
-            .of(RemoteService.NotImplemented, RemoteService.BadGateway)
-            .toString
+          i.toEither.left.value.head.getMessage shouldBe NonEmptyList(
+            RemoteService.NotImplemented,
+            RemoteService.BadGateway
+          ).toString
         }
       }
-
     }
-
     describe("transRecover") {
       it("for successful") {
         for {
           s <- RemoteService.successful1.transRecover
         } yield {
-          s shouldBe Valid(1)
+          s shouldBe Success(1)
         }
       }
       it("for failed") {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Invalid(NonEmptyList.one(ClientException()))
+          f shouldBe Failure(NonEmptyList(ClientException()))
         }
       }
       it("for successful and failed") {
+        import scalaz.syntax.apply._
         for {
           s <- RemoteService.successful1.transRecover
           f1 <- RemoteService.failed1NotImplemented.transRecover
           f2 <- RemoteService.failed2BadGateway.transRecover
-          p = (s, f1, f2).mapN(RemoteTuple3[Int])
+          p = (s |@| f1 |@| f2) { _ + _ + _ }
         } yield {
-          s shouldBe Valid(1)
-          f1 shouldBe Invalid(
-            NonEmptyList.one(ClientException(RemoteService.NotImplemented))
+          s shouldBe Success(1)
+          f1 shouldBe Failure(
+            NonEmptyList(ClientException(RemoteService.NotImplemented))
           )
-          f2 shouldBe Invalid(
-            NonEmptyList.one(ClientException(RemoteService.BadGateway))
+          f2 shouldBe Failure(
+            NonEmptyList(ClientException(RemoteService.BadGateway))
           )
-          p shouldBe Invalid(
-            NonEmptyList.of(
+          p shouldBe Failure(
+            NonEmptyList(
               ClientException(RemoteService.NotImplemented),
               ClientException(RemoteService.BadGateway)
             )
@@ -153,6 +144,6 @@ class ValidatedNelFutureSpec
         }
       }
     }
-  }
 
+  }
 }

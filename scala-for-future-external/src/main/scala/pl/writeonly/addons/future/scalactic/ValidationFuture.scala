@@ -1,4 +1,4 @@
-package pl.writeonly.addons.dependency.scalactic
+package pl.writeonly.addons.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}

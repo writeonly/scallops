@@ -1,57 +1,58 @@
-package pl.writeonly.addons.dependency.scalaz
+package pl.writeonly.addons.future.cats
 
+import cats.data.Validated
+import cats.data.Validated.{Invalid, Valid}
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesBoth, Utils}
-import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
 
-trait ValidationFuture extends TypesBoth with Utils {
+trait ValidatedFuture extends TypesBoth with Utils {
 
-  override type Value[A, B] = Validation[A, B]
+  override type Value[A, B] = Validated[A, B]
 
   override def inSideOut[A, B](
     v: FutureV[A, B]
   )(implicit ec: EC): ValueF[A, B] =
     v match {
-      case Success(f: Future[B]) => for (a <- f) yield Validation.success(a)
-      case a: Failure[A]         => a |> Future.successful
+      case Valid(f: Future[B]) => for (a <- f) yield Validated.valid(a)
+      case a: Invalid[A]       => a |> Future.successful
     }
 
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
-      case Success(f: Future[B]) => f
-      case a: Failure[A]         => a |> toThrowable[Failure[A]] |> Future.failed
+      case Valid(f: Future[B]) => f
+      case a: Invalid[A]       => a |> toThrowable[Invalid[A]] |> Future.failed
     }
 
   override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =
-    v.transformAndRecover((s: B) => Success(s), {
-      case t => Validation.failure(t)
-    })
+    v.transformAndRecover(
+      (s: B) => Valid(s), { case t => Validated.invalid(t) }
+    )
 
   //    value.transform({
   //      case Success(s) => Success(Good(s))
   //      case Failure(t) => Success(Bad(t))
   //    })
 
-  implicit class SuccessFutureInSideOut[A, B](v: FutureV[A, B])
+  implicit class ValidFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
-      ValidationFuture.inSideOut(v)(ec)
+      ValidatedFuture.inSideOut(v)(ec)
   }
 
-  implicit class SuccessFutureGetOrFailed[A, B](v: FutureV[A, B])
+  implicit class ValidFutureGetOrFailed[A, B](v: FutureV[A, B])
       extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
-      ValidationFuture.getOrFailed(v)(ec)
+      ValidatedFuture.getOrFailed(v)(ec)
   }
 
-  implicit class SuccessFutureTransRecover[B](v: Future[B])
+  implicit class ValidFutureTransRecover[B](v: Future[B])
       extends TransRecover[Recovered[B]] {
     override def transRecover(implicit ec: EC): RecoveredF[B] =
-      ValidationFuture.transRecover(v)(ec)
+      ValidatedFuture.transRecover(v)(ec)
   }
 
 }
 
-object ValidationFuture extends ValidationFuture
+object ValidatedFuture extends ValidatedFuture

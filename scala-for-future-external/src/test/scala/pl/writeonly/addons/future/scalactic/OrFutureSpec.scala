@@ -1,7 +1,6 @@
-package pl.writeonly.addons.dependency.cats
+package pl.writeonly.addons.future.scalactic
 
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import org.scalactic.{Bad, ErrorMessage, Good, Or}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
 import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
@@ -10,19 +9,17 @@ import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
-class ValidatedFutureSpec
-    extends WhiteFutureSpec
-    with EitherValues
-    with ValidatedFuture {
-  describe("A Validated") {
-    describe("for Valid with successful") {
-      val v: Validated[String, ResultF] =
-        Validated.valid(Future.successful(1))
+class OrFutureSpec extends WhiteFutureSpec with EitherValues with OrFuture {
+  describe("A Or") {
+
+    describe("for Good with successful") {
+      val v: ResultF Or ErrorMessage =
+        Good(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Valid(1)
+          i shouldBe Good(1)
         }
       }
       it("getOrFailed") {
@@ -36,27 +33,25 @@ class ValidatedFutureSpec
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Valid(1)
+          i shouldBe Good(1)
         }
       }
     }
-    describe("for Invalid") {
-      val v: Validated[String, ResultF] =
-        Validated.invalid(RemoteService.InternalServerError)
+    describe("for Bad") {
+      val v: ResultF Or ErrorMessage =
+        Bad(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Invalid(RemoteService.InternalServerError)
+          i shouldBe Bad(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
         recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
-          } yield {
-            i shouldBe RemoteService.InternalServerError
-          }
+          } yield i
         }
       }
       it("getOrFailed and transRecover") {
@@ -72,25 +67,17 @@ class ValidatedFutureSpec
         for {
           s <- RemoteService.successful1.transRecover
         } yield {
-          s shouldBe Valid(1)
+          s shouldBe Good(1)
         }
       }
       it("for failed") {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Invalid(ClientException())
+          f shouldBe Bad(ClientException())
         }
       }
-      it("for successful and failed") {
-        for {
-          s <- RemoteService.successful1.transRecover
-          f <- RemoteService.failed0InternalServerError.transRecover
-        } yield {
-          s shouldBe Valid(1)
-          f shouldBe Invalid(ClientException())
-        }
-      }
+
     }
   }
 

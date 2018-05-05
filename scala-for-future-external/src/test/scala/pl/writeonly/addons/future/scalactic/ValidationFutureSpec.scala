@@ -1,50 +1,51 @@
-package pl.writeonly.addons.dependency.scalaz
+package pl.writeonly.addons.future.scalactic
 
+import org.scalactic.{Fail, Pass, Validation}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
+import pl.writeonly.addons.future.RemoteService.ClientException
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
-import scalaz.{-\/, \/, \/-}
 
-import scala.concurrent.Future
+import scala.runtime.BoxedUnit
 
-class HydraFutureSpec
+class ValidationFutureSpec
     extends WhiteFutureSpec
     with EitherValues
-    with HydraFuture {
-  describe("A Hydra ") {
-    describe("for Right with successful") {
-      val v: String \/ ResultF = \/-[ResultF](Future.successful(1))
+    with ValidationFuture {
+  describe("A Validation") {
+    describe("for Pass") {
+      val v: Validation[String] = Pass
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe \/-(1)
+          i shouldBe null
         }
       }
       it("getOrFailed") {
         for {
           i <- v.getOrFailed
         } yield {
-          i shouldBe 1
+          i shouldBe a[BoxedUnit]
+          i shouldBe ()
         }
       }
       it("getOrFailed and transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe \/-(1)
+          i shouldBe Pass
         }
       }
     }
-    describe("for Left") {
-      val v: String \/ ResultF = -\/(RemoteService.InternalServerError)
+    describe("for Fail") {
+      val v: Validation[String] = Fail(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe -\/(RemoteService.InternalServerError)
+          i shouldBe Fail(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
@@ -52,16 +53,15 @@ class HydraFutureSpec
           for {
             i <- v.getOrFailed
           } yield {
-            i shouldBe 1
+            i shouldBe RemoteService.InternalServerError
           }
-
         }
       }
       it("getOrFailed and transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[ToThrowableException]
+          i shouldBe a[Fail[ToThrowableException]]
         }
       }
     }
@@ -70,16 +70,29 @@ class HydraFutureSpec
         for {
           s <- RemoteService.successful1.transRecover
         } yield {
-          s shouldBe \/-(1)
+          s shouldBe Pass
         }
       }
       it("for failed") {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe -\/(ClientException())
+          f shouldBe Fail(ClientException())
         }
       }
+      it("for successful and failed") {
+        for {
+          s <- RemoteService.successful1.transRecover
+          f <- RemoteService.failed0InternalServerError.transRecover
+          l = List(s, f)
+        } yield {
+          s shouldBe Pass
+          f shouldBe Fail(ClientException())
+          l shouldBe List(Pass, Fail(ClientException()))
+        }
+      }
+
     }
   }
+
 }
