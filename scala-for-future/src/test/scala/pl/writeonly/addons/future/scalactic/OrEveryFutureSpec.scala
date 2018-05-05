@@ -3,7 +3,7 @@ package pl.writeonly.addons.future.scalactic
 import org.scalactic._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
@@ -17,7 +17,7 @@ class OrEveryFutureSpec
   describe("A Or Every") {
 
     describe("for Good with successful") {
-      val v: FutureResult Or Every[ErrorMessage] =
+      val v: ResultF Or Every[ErrorMessage] =
         Good(Future.successful(1))
       it("inSideOut") {
         for {
@@ -42,7 +42,7 @@ class OrEveryFutureSpec
       }
     }
     describe("for Bad") {
-      val v: FutureResult Or Every[ErrorMessage] =
+      val v: ResultF Or Every[ErrorMessage] =
         Bad(One(RemoteService.InternalServerError))
       it("inSideOut") {
         for {

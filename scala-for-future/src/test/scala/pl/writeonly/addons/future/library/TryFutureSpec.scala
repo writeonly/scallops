@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 class TryFutureSpec extends WhiteFutureSpec with TryFuture {
   describe("A Try") {
     describe("for Success with successful") {
-      val v: Try[FutureResult] = Try(Future.successful(1))
+      val v: Try[ResultF] = Try(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -34,7 +34,7 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
       }
     }
     describe("for Success with failed") {
-      val v: Try[FutureResult] = Try(Future.failed(ClientException()))
+      val v: Try[ResultF] = Try(Future.failed(ClientException()))
       it("inSideOut") {
         recoverToSucceededIf[ClientException] {
           for {
@@ -59,7 +59,7 @@ class TryFutureSpec extends WhiteFutureSpec with TryFuture {
       }
     }
     describe("for Failure") {
-      val v: Try[FutureResult] = Failure(ClientException())
+      val v: Try[ResultF] = Failure(ClientException())
       it("inSideOut") {
         for {
           i <- v.inSideOut

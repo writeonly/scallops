@@ -2,7 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, Success, Validation}
@@ -15,7 +15,7 @@ class ValidationFutureSpec
     with ValidationFuture {
   describe("A Validation") {
     describe("for Success with successful") {
-      val v: Validation[String, FutureResult] =
+      val v: Validation[String, ResultF] =
         Validation.success(Future.successful(1))
       it("inSideOut") {
         for {
@@ -40,7 +40,7 @@ class ValidationFutureSpec
       }
     }
     describe("for Validation with successful") {
-      val v: Validation[String, FutureResult] =
+      val v: Validation[String, ResultF] =
         Validation.failure(RemoteService.InternalServerError)
       it("inSideOut") {
         for {

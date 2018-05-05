@@ -5,7 +5,8 @@ import scala.concurrent.Future
 import pl.writeonly.addons.pipe.Pipe._
 
 object RemoteService {
-  type FutureResult = Future[Int]
+  type Result = Int
+  type ResultF = Future[Result]
 
   val InternalServerError = "Internal Server Error"
   val NotImplemented = "Not Implemented"
@@ -13,12 +14,12 @@ object RemoteService {
   val ServiceUnavailable = "Service Unavailable"
   val GatewayTimeout = "Gateway Timeout"
 
-  def successful1: FutureResult = Future.successful(1)
-  def failed0InternalServerError: FutureResult = InternalServerError |> failed
-  def failed1NotImplemented: FutureResult = NotImplemented |> failed
-  def failed2BadGateway: FutureResult = BadGateway |> failed
-  def failed3ServiceUnavailable: FutureResult = ServiceUnavailable |> failed
-  def failed4GatewayTimeout: FutureResult = GatewayTimeout |> failed
+  def successful1: ResultF = Future.successful(1)
+  def failed0InternalServerError: ResultF = InternalServerError |> failed
+  def failed1NotImplemented: ResultF = NotImplemented |> failed
+  def failed2BadGateway: ResultF = BadGateway |> failed
+  def failed3ServiceUnavailable: ResultF = ServiceUnavailable |> failed
+  def failed4GatewayTimeout: ResultF = GatewayTimeout |> failed
 
   def failed(message: String): Future[Nothing] =
     Future.failed(ClientException(message))

@@ -2,7 +2,11 @@ package pl.writeonly.addons.future.library
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{
+  ClientException,
+  Result,
+  ResultF
+}
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -13,8 +17,20 @@ class EitherFutureSpec
     with EitherValues
     with EitherFuture {
   describe("A Either") {
+
+    describe("for Right") {
+      val v: Either[String, Int] = Right[String, Result](1)
+      it("toFuture and getOrFailed") {
+        for {
+          r <- v.toFuture.transRecover
+        } yield {
+          r shouldBe v
+        }
+      }
+    }
+
     describe("for Right with successful") {
-      val v = Right[String, FutureResult](Future.successful(1))
+      val v = Right[String, ResultF](Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -38,7 +54,7 @@ class EitherFutureSpec
       }
     }
     describe("for Left with successful") {
-      val v = Left[String, FutureResult](RemoteService.InternalServerError)
+      val v = Left[String, ResultF](RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut

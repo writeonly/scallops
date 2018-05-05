@@ -5,7 +5,7 @@ import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.addons.future.cats.ValidatedNelFuture._
 import pl.writeonly.addons.ops.ToThrowableException
@@ -16,7 +16,7 @@ import scala.concurrent.Future
 class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
   describe("A ValidatedNel") {
     describe("for Valid with successful") {
-      val v: ValidatedNel[String, FutureResult] =
+      val v: ValidatedNel[String, ResultF] =
         Validated.validNel(Future.successful(1))
       it("inSideOut") {
         for {
@@ -41,7 +41,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
       }
     }
     describe("for Invalid ") {
-      val v: ValidatedNel[String, FutureResult] =
+      val v: ValidatedNel[String, ResultF] =
         Validated.invalidNel(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
@@ -73,7 +73,7 @@ class ValidatedNelFutureSpec extends WhiteFutureSpec with EitherValues {
       }
     }
     describe("for double Invalid ") {
-      val v: ValidatedNel[String, FutureResult] = Validated.Invalid(
+      val v: ValidatedNel[String, ResultF] = Validated.Invalid(
         NonEmptyList.of(RemoteService.NotImplemented, RemoteService.BadGateway)
       )
       it("inSideOut") {

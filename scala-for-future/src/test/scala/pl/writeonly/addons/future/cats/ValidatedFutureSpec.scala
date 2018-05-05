@@ -4,7 +4,7 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.future.cats.ValidatedFuture._
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
@@ -14,7 +14,7 @@ import scala.concurrent.Future
 class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
   describe("A Validated") {
     describe("for Valid with successful") {
-      val v: Validated[String, FutureResult] =
+      val v: Validated[String, ResultF] =
         Validated.valid(Future.successful(1))
       it("inSideOut") {
         for {
@@ -39,7 +39,7 @@ class ValidatedFutureSpec extends WhiteFutureSpec with EitherValues {
       }
     }
     describe("for Invalid") {
-      val v: Validated[String, FutureResult] =
+      val v: Validated[String, ResultF] =
         Validated.invalid(RemoteService.InternalServerError)
       it("inSideOut") {
         for {

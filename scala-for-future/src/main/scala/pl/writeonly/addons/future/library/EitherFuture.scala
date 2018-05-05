@@ -2,10 +2,11 @@ package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
 import pl.writeonly.addons.future.api.{EC, TypesBoth, Utils}
+import pl.writeonly.addons.ops.EitherOps
 
 import scala.concurrent.Future
 
-trait EitherFuture extends TypesBoth with Utils {
+trait EitherFuture extends TypesBoth with Utils with EitherOps {
   override type Value[A, B] = Either[A, B]
 
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =

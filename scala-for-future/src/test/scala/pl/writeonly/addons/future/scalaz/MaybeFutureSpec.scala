@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.scalaz
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.FutureResult
+import pl.writeonly.addons.future.RemoteService.ResultF
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.Maybe
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
   describe("A Maybe") {
     describe("for Just with successful") {
-      val v: Maybe[FutureResult] = Maybe.just(Future.successful(1))
+      val v: Maybe[ResultF] = Maybe.just(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -36,7 +36,7 @@ class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
       }
     }
     describe("for Empty") {
-      val v: Maybe[FutureResult] = Maybe.empty[FutureResult]
+      val v: Maybe[ResultF] = Maybe.empty[ResultF]
       it("inSideOut") {
         for {
           i <- v.inSideOut

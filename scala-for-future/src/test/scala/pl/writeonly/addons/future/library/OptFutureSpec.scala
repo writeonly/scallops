@@ -1,7 +1,7 @@
 package pl.writeonly.addons.future.library
 
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.FutureResult
+import pl.writeonly.addons.future.RemoteService.ResultF
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 
@@ -10,7 +10,7 @@ import scala.concurrent.Future
 class OptFutureSpec extends WhiteFutureSpec with OptFuture {
   describe("A Opt") {
     describe("for Some with successful") {
-      val v: Option[FutureResult] = Option(Future.successful(1))
+      val v: Option[ResultF] = Option(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -34,7 +34,7 @@ class OptFutureSpec extends WhiteFutureSpec with OptFuture {
       }
     }
     describe("for None") {
-      val v: Option[FutureResult] = Option.empty
+      val v: Option[ResultF] = Option.empty
       it("inSideOut") {
         for {
           i <- v.inSideOut

@@ -2,7 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
@@ -15,7 +15,7 @@ class ValidationNelFutureSpec
     with ValidationNelFuture {
   describe("A ValidationNel") {
     describe("for Success with successful") {
-      val v: ValidationNel[String, FutureResult] =
+      val v: ValidationNel[String, ResultF] =
         Validation.success(Future.successful(1))
       it("inSideOut") {
         for {
@@ -40,7 +40,7 @@ class ValidationNelFutureSpec
       }
     }
     describe("for FailureNel") {
-      val v: ValidationNel[String, FutureResult] =
+      val v: ValidationNel[String, ResultF] =
         Validation.failureNel(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
@@ -70,7 +70,7 @@ class ValidationNelFutureSpec
       }
     }
     describe("for double FailureNel") {
-      val v: ValidationNel[String, FutureResult] = Failure(
+      val v: ValidationNel[String, ResultF] = Failure(
         NonEmptyList(RemoteService.NotImplemented, RemoteService.BadGateway)
       )
       it("inSideOut") {

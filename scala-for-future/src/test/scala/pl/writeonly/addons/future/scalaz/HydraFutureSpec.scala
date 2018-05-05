@@ -2,7 +2,7 @@ package pl.writeonly.addons.future.scalaz
 
 import org.scalatest.EitherValues
 import pl.writeonly.addons.future.RemoteService
-import pl.writeonly.addons.future.RemoteService.{ClientException, FutureResult}
+import pl.writeonly.addons.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.addons.ops.ToThrowableException
 import pl.writeonly.sons.specs.WhiteFutureSpec
 import scalaz.{-\/, \/, \/-}
@@ -15,7 +15,7 @@ class HydraFutureSpec
     with HydraFuture {
   describe("A Hydra ") {
     describe("for Right with successful") {
-      val v: String \/ FutureResult = \/-[FutureResult](Future.successful(1))
+      val v: String \/ ResultF = \/-[ResultF](Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
@@ -39,7 +39,7 @@ class HydraFutureSpec
       }
     }
     describe("for Left") {
-      val v: String \/ FutureResult = -\/(RemoteService.InternalServerError)
+      val v: String \/ ResultF = -\/(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
