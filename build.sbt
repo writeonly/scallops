@@ -15,6 +15,7 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-feature",
+  "-Ypartial-unification",
   "-Ywarn-unused-import",
   "-Xfatal-warnings",
   "-Xlint",
@@ -29,7 +30,7 @@ val ScalaLibraryVersion = "2.12.4"
 lazy val versionSnapshot = s"$ScalaticVersion-SNAPSHOT"
 
 lazy val commonSettings = Seq(
-  organization := "pl.writeonly.addons",
+  organization := "pl.writeonly.scalaops",
   scalaVersion := ScalaLibraryVersion,
   version := versionSnapshot
 )
@@ -64,7 +65,7 @@ lazy val scalaaddons = (project in file("."))
   .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "scalaaddons",
+    name := "scalaops",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,
@@ -147,9 +148,9 @@ lazy val pipe = (project in file("scala-pipe"))
     )
   )
 
-lazy val specs = (project in file("scalaaddon-specs"))
+lazy val specs = (project in file("scala-specs"))
   .settings(
-    name := "scalaaddon-specs",
+    name := "scala-specs",
     commonSettings,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
