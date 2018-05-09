@@ -1,6 +1,6 @@
 package pl.writeonly.scalaops.future.library
 
-import SeqFuture._
+import pl.writeonly.scalaops.future.library.SeqFuture._
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
 
 import scala.concurrent.Future

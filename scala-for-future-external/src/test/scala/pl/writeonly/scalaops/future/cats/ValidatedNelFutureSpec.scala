@@ -3,13 +3,10 @@ package pl.writeonly.scalaops.future.cats
 import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
-import org.scalatest.EitherValues
-import pl.writeonly.scalaops.future.WhiteFutureSpecWithEither
-import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.RemoteTuple.RemoteTuple3
+import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
-import pl.writeonly.scalaops.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 

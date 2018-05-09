@@ -9,4 +9,5 @@ object ToThrowableException {
       extends ToThrowableException(s"$value")
 
   final case class ToThrowable0Exception[V]() extends ToThrowableException("")
+
 }

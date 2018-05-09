@@ -14,4 +14,5 @@ object SeqFuture {
     override def inSideOut(implicit ec: EC): Future[Seq[A]] =
       SeqFuture.inSideOut(v)(ec)
   }
+
 }

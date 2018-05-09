@@ -10,6 +10,7 @@ trait EitherOps {
       case Left(b: B) => b |> toThrowable[B] |> Failure[A]
     }
   }
+
 }
 
 object EitherOps extends EitherOps

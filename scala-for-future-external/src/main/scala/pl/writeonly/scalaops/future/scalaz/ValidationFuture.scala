@@ -6,7 +6,6 @@ import pl.writeonly.scalaops.future.api.Ops.{
   TransRecover
 }
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
-import pl.writeonly.scalaops.future.api.{TypesBoth, Utils}
 import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future

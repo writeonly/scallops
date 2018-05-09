@@ -3,7 +3,6 @@ package pl.writeonly.scalaops.future.cats
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
-import pl.writeonly.scalaops.future.WhiteFutureSpecWithEither
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
 

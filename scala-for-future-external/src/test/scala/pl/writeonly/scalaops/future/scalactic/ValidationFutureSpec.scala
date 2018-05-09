@@ -2,7 +2,6 @@ package pl.writeonly.scalaops.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
 import pl.writeonly.scalaops.future.RemoteService.ClientException
-import pl.writeonly.scalaops.future.WhiteFutureSpecWithEither
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
 

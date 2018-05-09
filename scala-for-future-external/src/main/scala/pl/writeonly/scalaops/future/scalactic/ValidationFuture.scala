@@ -7,7 +7,6 @@ import pl.writeonly.scalaops.future.api.Ops.{
   TransRecover
 }
 import pl.writeonly.scalaops.future.api.{EC, TypesLeft, Utils}
-import pl.writeonly.scalaops.future.api.{TypesLeft, Utils}
 
 import scala.concurrent.Future
 
@@ -27,7 +26,7 @@ trait ValidationFuture extends TypesLeft with Utils {
       case a @ Fail(_) => a |> Future.successful
     }
 
-//  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
+  //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF =
     v.transformAndRecover(_ => Pass, { case t => Fail(t) })

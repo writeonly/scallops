@@ -3,7 +3,6 @@ package pl.writeonly.scalaops.future.scalactic
 import org.scalactic.{Bad, ErrorMessage, Good, Or}
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
-import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
 
 import scala.concurrent.Future

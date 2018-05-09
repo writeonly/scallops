@@ -3,6 +3,7 @@ package pl.writeonly.scalaops.future.api
 import scala.concurrent.Future
 
 object Ops {
+
   trait GetOrFailed[A] {
     def getOrFailed(implicit ec: EC): Future[A]
   }

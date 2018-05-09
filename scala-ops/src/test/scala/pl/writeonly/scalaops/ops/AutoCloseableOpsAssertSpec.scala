@@ -1,6 +1,6 @@
 package pl.writeonly.scalaops.ops
 
-import AutoCloseableOps.{FAAny, toConsumerAny}
+import pl.writeonly.scalaops.ops.AutoCloseableOps.{FAAny, toConsumerAny}
 import pl.writeonly.scalaops.specs.WhiteAssertSpec
 
 class AutoCloseableOpsAssertSpec extends WhiteAssertSpec {

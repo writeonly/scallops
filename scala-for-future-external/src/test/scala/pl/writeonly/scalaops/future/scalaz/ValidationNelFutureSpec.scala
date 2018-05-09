@@ -2,7 +2,6 @@ package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
-import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
@@ -124,7 +123,9 @@ class ValidationNelFutureSpec
           s <- RemoteService.successful1.transRecover
           f1 <- RemoteService.failed1NotImplemented.transRecover
           f2 <- RemoteService.failed2BadGateway.transRecover
-          p = (s |@| f1 |@| f2) { _ + _ + _ }
+          p = (s |@| f1 |@| f2) {
+            _ + _ + _
+          }
         } yield {
           s shouldBe Success(1)
           f1 shouldBe Failure(

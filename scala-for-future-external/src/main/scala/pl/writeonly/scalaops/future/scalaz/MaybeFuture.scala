@@ -6,7 +6,6 @@ import pl.writeonly.scalaops.future.api.Ops.{
   TransRecover
 }
 import pl.writeonly.scalaops.future.api.{EC, TypesRight, Utils}
-import pl.writeonly.scalaops.future.api.{TypesRight, Utils}
 import pl.writeonly.scalaops.ops.ToThrowableException.ToThrowable0Exception
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}
@@ -52,6 +51,7 @@ trait MaybeFuture extends TypesRight with Utils {
     override def transRecover(implicit ec: EC): RecoveredF[A] =
       MaybeFuture.transRecover(v)(ec)
   }
+
 }
 
 object MaybeFuture extends MaybeFuture

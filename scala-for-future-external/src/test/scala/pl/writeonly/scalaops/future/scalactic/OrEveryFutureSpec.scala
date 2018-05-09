@@ -1,13 +1,10 @@
 package pl.writeonly.scalaops.future.scalactic
 
 import org.scalactic._
-import org.scalatest.EitherValues
-import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.RemoteTuple.RemoteTuple3
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
-import pl.writeonly.scalaops.specs.WhiteFutureSpec
 
 import scala.concurrent.Future
 
@@ -90,7 +87,9 @@ class OrEveryFutureSpec extends WhiteFutureSpecWithEither with OrEveryFuture {
             s <- RemoteService.successful1.transRecover
             f1 <- RemoteService.failed1NotImplemented.transRecover
             f2 <- RemoteService.failed2BadGateway.transRecover
-            p = Accumulation.withGood(s, f1, f2) { RemoteTuple3(_, _, _) }
+            p = Accumulation.withGood(s, f1, f2) {
+              RemoteTuple3(_, _, _)
+            }
           } yield {
             s shouldBe Good(1)
             f1 shouldBe Bad(One(ClientException(RemoteService.NotImplemented)))

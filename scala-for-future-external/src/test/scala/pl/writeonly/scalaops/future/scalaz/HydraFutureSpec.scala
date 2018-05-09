@@ -1,7 +1,6 @@
 package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
-import pl.writeonly.scalaops.future.WhiteFutureSpecWithEither
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
 import pl.writeonly.scalaops.ops.ToThrowableException
 import scalaz.{-\/, \/, \/-}

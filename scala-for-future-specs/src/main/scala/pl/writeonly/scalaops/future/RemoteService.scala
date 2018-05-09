@@ -15,10 +15,15 @@ object RemoteService extends Pipe {
   val GatewayTimeout = "Gateway Timeout"
 
   def successful1: ResultF = Future.successful(1)
+
   def failed0InternalServerError: ResultF = InternalServerError |> failed
+
   def failed1NotImplemented: ResultF = NotImplemented |> failed
+
   def failed2BadGateway: ResultF = BadGateway |> failed
+
   def failed3ServiceUnavailable: ResultF = ServiceUnavailable |> failed
+
   def failed4GatewayTimeout: ResultF = GatewayTimeout |> failed
 
   def failed(message: String): Future[Nothing] =

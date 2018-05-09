@@ -7,7 +7,6 @@ import pl.writeonly.scalaops.future.api.Ops.{
   TransRecover
 }
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
-import pl.writeonly.scalaops.future.api.{TypesBoth, Utils}
 
 import scala.concurrent.Future
 
@@ -29,7 +28,7 @@ trait OrEveryFuture extends TypesBoth with Utils {
       case a @ Bad(_)         => a |> Future.successful
     }
 
-//  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
+  //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
     v.transformAndRecover((s: A) => Good(s), { case t => Bad(One(t)) })
