@@ -1,16 +1,26 @@
 package pl.writeonly.scalaops.ops
 
+import pl.writeonly.scalaops.pipe.Pipe
+
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 trait FutureOps {
 
-  implicit class FutureOps[A](future: Future[A]) {
-    def transformAndRecover[B](s: A => B, pf: PartialFunction[Throwable, B])(
+  implicit class FutureOps[A](v: Future[A]) extends Pipe {
+    def transformAndRecover[B](s: A => B, r: Throwable => B)(
       implicit executor: ExecutionContext
     ): Future[B] =
-      future
-        .transform(s, e => e)
-        .recover(pf)
+      v.transform(s, e => e)
+        .recover { case t: Throwable => r(t) }
+
+    def transformToSuccess[B](s: A => B, r: Throwable => B)(
+      implicit executor: ExecutionContext
+    ): Future[B] =
+      v.transform({
+        case Success(a) => Success(s(a))
+        case Failure(t) => Success(r(t))
+      })
   }
 
 }

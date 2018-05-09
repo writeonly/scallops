@@ -32,7 +32,7 @@ trait OrEveryFuture extends TypesBoth with Utils {
   //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Good(s), { case t => Bad(One(t)) })
+    v.transformAndRecover(s => Good(s), t => Bad(One(t)))
 
   implicit class OrEveryFutureInSideOut[B, A](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {

@@ -27,7 +27,7 @@ trait TryFuture extends TypesRight with Utils {
     }
 
   override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Success(s), { case t => Failure(t) })
+    v.transformAndRecover(Success.apply, Failure.apply)
 
   implicit class TryFutureGetOrFailed[A](value: FutureV[A])
       extends GetOrFailed[A] {

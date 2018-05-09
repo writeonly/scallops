@@ -27,7 +27,7 @@ trait OptFuture extends TypesRight with Utils {
     }
 
   override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Option(s), { case _ => Option.empty })
+    v.transformAndRecover(Option.apply, _ => Option.empty)
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))

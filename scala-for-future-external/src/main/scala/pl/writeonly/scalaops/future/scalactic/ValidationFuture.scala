@@ -29,7 +29,7 @@ trait ValidationFuture extends TypesLeft with Utils {
   //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
 
   def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF =
-    v.transformAndRecover(_ => Pass, { case t => Fail(t) })
+    v.transformAndRecover(_ => Pass, Fail.apply)
 
   implicit class OrFutureInSideOut[A](v: FutureV[A])
       extends InSideOut[Value[A]] {

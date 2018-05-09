@@ -20,8 +20,8 @@ trait ValidatedNelFuture extends TypesBoth with Utils {
     v: FutureV[A, B]
   )(implicit ec: EC): ValueF[A, B] =
     v match {
-      case Valid(f: Future[B]) => for (a <- f) yield Validated.valid(a)
-      case a: Invalid[A]       => Future.successful(a)
+      case Valid(f: Future[B])         => for (a <- f) yield Validated.valid(a)
+      case a: Invalid[NonEmptyList[A]] => Future.successful(a)
     }
 
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =

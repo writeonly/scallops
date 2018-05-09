@@ -29,9 +29,7 @@ trait ValidationFuture extends TypesBoth with Utils {
     }
 
   override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =
-    v.transformAndRecover((s: B) => Success(s), {
-      case t => Validation.failure(t)
-    })
+    v.transformAndRecover(Validation.success, Validation.failure)
 
   //    value.transform({
   //      case Success(s) => Success(Good(s))

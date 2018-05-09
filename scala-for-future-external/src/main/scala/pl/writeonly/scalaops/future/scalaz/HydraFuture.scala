@@ -29,7 +29,7 @@ trait HydraFuture extends TypesBoth with Utils {
     }
 
   override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => \/-(s), { case t => -\/(t) })
+    v.transformAndRecover((s: A) => \/-(s), t => -\/(t))
 
   //    value.transform({
   //      case Success(s) => Success(Right(s))

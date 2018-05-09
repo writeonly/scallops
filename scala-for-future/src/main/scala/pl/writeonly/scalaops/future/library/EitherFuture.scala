@@ -9,6 +9,7 @@ import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
 import pl.writeonly.scalaops.ops.EitherOps
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 trait EitherFuture extends TypesBoth with Utils with EitherOps {
   override type Value[A, B] = Either[A, B]
@@ -28,12 +29,13 @@ trait EitherFuture extends TypesBoth with Utils with EitherOps {
     }
 
   override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Right(s), { case t => Left(t) })
+    v.transformAndRecover((s: A) => Right(s), t => Left(t))
 
-  //    value.transform({
-  //      case Success(s) => Success(Right(s))
-  //      case Failure(t) => Success(Left(t))
-  //    })
+  def transSuccess[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
+    v.transform({
+      case Success(s) => Success(Right(s))
+      case Failure(t) => Success(Left(t))
+    })
 
   implicit class EitherFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {

@@ -28,7 +28,7 @@ trait MaybeFuture extends TypesRight with Utils {
     }
 
   override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Just(s), { case _ => Maybe.empty })
+    v.transformAndRecover(Maybe.just, _ => Maybe.empty)
 
   //    value.transform({
   //      case Success(s) => Success(Option(s))

@@ -16,4 +16,6 @@ trait TypesBoth {
 
   def transRecover[A](value: Future[A])(implicit ec: EC): RecoveredF[A]
 
+//  def transSuccess[A](value: Future[A])(implicit ec: EC): RecoveredF[A]
+
 }

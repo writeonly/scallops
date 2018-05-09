@@ -76,8 +76,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scallops = (project in file("."))
   //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal)
-  .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal)
+  .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal, logging)
+  .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal, logging)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaops",
@@ -89,6 +89,21 @@ lazy val scallops = (project in file("."))
     coverageFailOnMinimum := true,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+    )
+  )
+
+lazy val logging = (project in file("scala-logging"))
+  .dependsOn(specs, pipe, ops)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scala-logging",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
+      "org.scalactic" %% "scalactic" % ScalaticVersion,
+      "com.typesafe.akka" %% "akka-actor" % "2.5.12"
     )
   )
 
