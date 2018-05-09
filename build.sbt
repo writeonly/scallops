@@ -50,8 +50,8 @@ lazy val commonSettings = Seq(
   version := versionSnapshot
 )
 
-lazy val IntegrationTest = config("it") extend(Test)
-lazy val End2EndTest = config("et") extend(Test)
+lazy val IntegrationTest = config("it") extend (Test)
+lazy val End2EndTest = config("et") extend (Test)
 
 logBuffered in Test := false
 testOptions in Test ++= Seq(
@@ -75,7 +75,7 @@ lazy val inConfigs = Seq(integrationInConfig, end2endInConfig)
 lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scallops = (project in file("."))
-//  .enablePlugins(JacocoItPlugin)
+  //  .enablePlugins(JacocoItPlugin)
   .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal)
   .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal)
   .configs(IntegrationTest, End2EndTest)
@@ -87,9 +87,9 @@ lazy val scallops = (project in file("."))
     coverageEnabled := true,
     coverageMinimum := 0,
     coverageFailOnMinimum := true,
-      libraryDependencies ++= Seq(
+    libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      )
+    )
   )
 
 lazy val futureExternal = (project in file("scala-for-future-external"))
@@ -131,7 +131,7 @@ lazy val futureSpecs = (project in file("scala-for-future-specs"))
     whiteSetting, graySetting, blackSetting,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-  )
+    )
   )
 
 lazy val ops = (project in file("scala-ops"))

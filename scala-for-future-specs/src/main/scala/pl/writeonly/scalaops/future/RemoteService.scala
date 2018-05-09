@@ -18,6 +18,9 @@ object RemoteService extends Pipe {
 
   def failed0InternalServerError: ResultF = InternalServerError |> failed
 
+  def failed(message: String): Future[Nothing] =
+    Future.failed(ClientException(message))
+
   def failed1NotImplemented: ResultF = NotImplemented |> failed
 
   def failed2BadGateway: ResultF = BadGateway |> failed
@@ -25,9 +28,6 @@ object RemoteService extends Pipe {
   def failed3ServiceUnavailable: ResultF = ServiceUnavailable |> failed
 
   def failed4GatewayTimeout: ResultF = GatewayTimeout |> failed
-
-  def failed(message: String): Future[Nothing] =
-    Future.failed(ClientException(message))
 
   final case class ClientException(message: String = InternalServerError)
       extends RuntimeException(message)
