@@ -1,7 +1,11 @@
 package pl.writeonly.scalaops.future.library
 
 import pl.writeonly.scalaops.future.RemoteService
-import pl.writeonly.scalaops.future.RemoteService.{ClientException, Result, ResultF}
+import pl.writeonly.scalaops.future.RemoteService.{
+  ClientException,
+  Result,
+  ResultF
+}
 import pl.writeonly.scalaops.ops.TryOps
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
 

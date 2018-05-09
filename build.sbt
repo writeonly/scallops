@@ -12,13 +12,28 @@ scapegoatVersion in ThisBuild := "1.3.4"
 wartremoverErrors ++= Warts.unsafe
 
 scalacOptions ++= Seq(
-  "-unchecked",
   "-deprecation",
+  "-explaintypes",
   "-feature",
-  "-Ypartial-unification",
-  "-Ywarn-unused-import",
+  "-language:postfixOps",
+  "-language:implicitConversions",
+  "-target:jvm-1.8",
+  "-unchecked",
+  "-Xcheckinit",
   "-Xfatal-warnings",
+  "-Xfuture",
   "-Xlint",
+  "-Xverify",
+  "-Ypartial-unification",
+  "-Ywarn-adapted-args",
+  "-Ywarn-dead-code",
+  "-Ywarn-inaccessible",
+  "-Ywarn-infer-any",
+  "-Ywarn-nullary-override",
+  "-Ywarn-nullary-unit",
+  "-Ypartial-unification",
+  "-Ywarn-unused",
+  "-Ywarn-unused-import",
 )
 
 scalastyleFailOnWarning := true
@@ -59,7 +74,7 @@ lazy val blackSetting = testOptions in End2EndTest := Seq(Tests.Filter(blackFilt
 lazy val inConfigs = Seq(integrationInConfig, end2endInConfig)
 lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
-lazy val scalaaddons = (project in file("."))
+lazy val scallops = (project in file("."))
 //  .enablePlugins(JacocoItPlugin)
   .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal)
   .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal)
@@ -131,7 +146,6 @@ lazy val ops = (project in file("scala-ops"))
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
       "org.scalactic" %% "scalactic" % ScalaticVersion,
       "org.typelevel" %% "cats-core" % "1.1.0"
-
     )
   )
 

@@ -2,7 +2,6 @@ package pl.writeonly.scalaops.future.library
 
 import pl.writeonly.scalaops.future.RemoteService
 import pl.writeonly.scalaops.future.RemoteService.{Result, ResultF}
-import pl.writeonly.addons.ops.OptOps
 import pl.writeonly.scalaops.ops.{OptOps, ToThrowableException}
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
 

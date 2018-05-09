@@ -2,7 +2,11 @@ package pl.writeonly.scalaops.future.cats
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import pl.writeonly.scalaops.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
+import pl.writeonly.scalaops.future.api.Ops.{
+  GetOrFailed,
+  InSideOut,
+  TransRecover
+}
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
 import pl.writeonly.scalaops.future.api.{TypesBoth, Utils}
 

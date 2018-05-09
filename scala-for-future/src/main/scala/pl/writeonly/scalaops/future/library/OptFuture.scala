@@ -1,7 +1,12 @@
 package pl.writeonly.scalaops.future.library
 
-import pl.writeonly.scalaops.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
+import pl.writeonly.scalaops.future.api.Ops.{
+  GetOrFailed,
+  InSideOut,
+  TransRecover
+}
 import pl.writeonly.scalaops.future.api.{EC, TypesRight, Utils}
+import pl.writeonly.scalaops.ops.ToThrowableException.ToThrowable0Exception
 
 import scala.concurrent.Future
 

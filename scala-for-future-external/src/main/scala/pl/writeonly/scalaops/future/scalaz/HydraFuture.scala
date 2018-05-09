@@ -1,6 +1,10 @@
 package pl.writeonly.scalaops.future.scalaz
 
-import pl.writeonly.scalaops.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
+import pl.writeonly.scalaops.future.api.Ops.{
+  GetOrFailed,
+  InSideOut,
+  TransRecover
+}
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
 import pl.writeonly.scalaops.future.api.{TypesBoth, Utils}
 import scalaz.{-\/, \/, \/-}

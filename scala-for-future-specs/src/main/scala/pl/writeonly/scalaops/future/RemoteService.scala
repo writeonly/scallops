@@ -1,8 +1,10 @@
 package pl.writeonly.scalaops.future
 
+import pl.writeonly.scalaops.pipe.Pipe
+
 import scala.concurrent.Future
 
-object RemoteService {
+object RemoteService extends Pipe {
   type Result = Int
   type ResultF = Future[Result]
 

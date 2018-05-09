@@ -1,7 +1,11 @@
 package pl.writeonly.scalaops.future.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
-import pl.writeonly.scalaops.future.api.Ops.{GetOrFailed, InSideOut, TransRecover}
+import pl.writeonly.scalaops.future.api.Ops.{
+  GetOrFailed,
+  InSideOut,
+  TransRecover
+}
 import pl.writeonly.scalaops.future.api.{EC, TypesLeft, Utils}
 import pl.writeonly.scalaops.future.api.{TypesLeft, Utils}
 
