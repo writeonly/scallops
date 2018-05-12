@@ -1,6 +1,7 @@
 package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -32,13 +33,9 @@ trait ValidationNelFuture extends TypesBoth with Utils {
     }
 
   implicit class SuccessFutureInSideOut[A, B](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       ValidationNelFuture.inSideOut(v)(ec)
-  }
-
-  implicit class SuccessFutureGetOrFailed[A, B](v: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       ValidationNelFuture.getOrFailed(v)(ec)
   }

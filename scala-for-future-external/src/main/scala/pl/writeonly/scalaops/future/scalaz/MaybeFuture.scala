@@ -1,6 +1,7 @@
 package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -27,15 +28,12 @@ trait MaybeFuture extends TypesRight with Utils {
       case a: Empty[A]        => Future.successful(a)
     }
 
-  implicit class OptFutureGetOrFailed[A](v: FutureV[A]) extends GetOrFailed[A] {
-    override def getOrFailed(implicit ec: EC): Future[A] =
-      MaybeFuture.getOrFailed(v)(ec)
-  }
-
   implicit class OptFutureInSideOut[A](v: FutureV[A])
-      extends InSideOut[Value[A]] {
+      extends FutureVOps[Value[A], A] {
     override def inSideOut(implicit ec: EC): ValueF[A] =
       MaybeFuture.inSideOut(v)(ec)
+    override def getOrFailed(implicit ec: EC): Future[A] =
+      MaybeFuture.getOrFailed(v)(ec)
   }
 
   implicit class OptFutureTransRecover[A](f: Future[A])

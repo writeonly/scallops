@@ -2,6 +2,7 @@ package pl.writeonly.scalaops.future.scalactic
 
 import org.scalactic.{Bad, Good, Or}
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -17,7 +18,7 @@ trait OrFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Good(f: Future[B]) => f
-      case Bad(f: A)          => f |> toThrowable[A] |> Future.failed
+      case Bad(f)             => f |> toThrowable[A] |> Future.failed
     }
 
   override def inSideOut[A, B](
@@ -28,19 +29,13 @@ trait OrFuture extends TypesBoth with Utils {
       case a @ Bad(_)         => a |> Future.successful
     }
 
-  //  override def recover[A](v: Future[A])(implicit ec: EC): Recovered[A] = ???
-
   def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
     v.transformAndRecover(s => Good(s), Bad.apply)
 
   implicit class OrFutureInSideOut[B, A](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       OrFuture.inSideOut(v)(ec)
-  }
-
-  implicit class OrFutureGetOrFailed[A, B](v: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       OrFuture.getOrFailed(v)(ec)
   }

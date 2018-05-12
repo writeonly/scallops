@@ -12,7 +12,7 @@ trait EitherFuture extends TypesBoth with Utils with EitherOps {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case Right(f: Future[B]) => f
-      case Left(f: A)          => f |> toThrowable[A] |> Future.failed
+      case Left(f)             => f |> toThrowable[A] |> Future.failed
     }
 
   override def inSideOut[A, B](

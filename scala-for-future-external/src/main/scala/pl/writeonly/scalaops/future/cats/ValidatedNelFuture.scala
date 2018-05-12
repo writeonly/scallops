@@ -4,6 +4,7 @@ import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -34,13 +35,9 @@ trait ValidatedNelFuture extends TypesBoth with Utils {
     }
 
   implicit class ValidFutureInSideOut[A, B](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       ValidatedNelFuture.inSideOut(v)(ec)
-  }
-
-  implicit class ValidFutureGetOrFailed[A, B](v: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       ValidatedNelFuture.getOrFailed(v)(ec)
   }

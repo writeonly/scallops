@@ -16,4 +16,5 @@ trait TypesLeft {
 
   def neverOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[Nothing]
 
+  def getOrFailed[A, B](v: FutureV[A], b: B)(implicit ec: EC): Future[B]
 }

@@ -10,6 +10,9 @@ import scala.runtime.BoxedUnit
 class ValidationFutureSpec
     extends WhiteFutureSpecWithEither
     with ValidationFuture {
+
+  case object Done
+
   describe("A Validation") {
     describe("for Pass") {
       val v: Validation[String] = Pass
@@ -20,17 +23,32 @@ class ValidationFutureSpec
           i shouldBe null
         }
       }
-      it("getOrFailed") {
+      it("unitOrFailed") {
         for {
-          i <- v.getOrFailed
+          i <- v.unitOrFailed
         } yield {
           i shouldBe a[BoxedUnit]
           i shouldBe ()
         }
       }
+      it("unitOrFailed and transRecover") {
+        for {
+          i <- v.unitOrFailed.transRecover
+        } yield {
+          i shouldBe Pass
+        }
+
+      }
+      it("getOrFailed") {
+        for {
+          i <- v.getOrFailed(Done)
+        } yield {
+          i shouldBe Done
+        }
+      }
       it("getOrFailed and transRecover") {
         for {
-          i <- v.getOrFailed.transRecover
+          i <- v.getOrFailed(Done).transRecover
         } yield {
           i shouldBe Pass
         }
@@ -45,10 +63,26 @@ class ValidationFutureSpec
           i shouldBe Fail(RemoteService.InternalServerError)
         }
       }
+      it("unitOrFailed") {
+        recoverToSucceededIf[ToThrowableException] {
+          for {
+            i <- v.unitOrFailed
+          } yield {
+            i shouldBe RemoteService.InternalServerError
+          }
+        }
+      }
+      it("unitOrFailed and transRecover") {
+        for {
+          i <- v.unitOrFailed.transRecover
+        } yield {
+          i shouldBe a[Fail[ToThrowableException]]
+        }
+      }
       it("getOrFailed") {
         recoverToSucceededIf[ToThrowableException] {
           for {
-            i <- v.getOrFailed
+            i <- v.getOrFailed(Done)
           } yield {
             i shouldBe RemoteService.InternalServerError
           }
@@ -56,7 +90,7 @@ class ValidationFutureSpec
       }
       it("getOrFailed and transRecover") {
         for {
-          i <- v.getOrFailed.transRecover
+          i <- v.getOrFailed(Done).transRecover
         } yield {
           i shouldBe a[Fail[ToThrowableException]]
         }

@@ -2,6 +2,7 @@ package pl.writeonly.scalaops.future.scalactic
 
 import org.scalactic._
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -35,13 +36,9 @@ trait OrEveryFuture extends TypesBoth with Utils {
     v.transformAndRecover(s => Good(s), t => Bad(One(t)))
 
   implicit class OrEveryFutureInSideOut[B, A](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       OrEveryFuture.inSideOut[A, B](v)(ec)
-  }
-
-  implicit class OrEveryFutureGetOrFailed[A, B](v: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       OrEveryFuture.getOrFailed(v)(ec)
   }

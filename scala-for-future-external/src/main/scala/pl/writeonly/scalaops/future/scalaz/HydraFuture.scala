@@ -1,6 +1,7 @@
 package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -17,7 +18,7 @@ trait HydraFuture extends TypesBoth with Utils {
   override def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B] =
     v match {
       case \/-(f: Future[B]) => f
-      case -\/(f: A)         => f |> toThrowable[A] |> failed
+      case -\/(f)            => f |> toThrowable[A] |> failed
     }
 
   override def inSideOut[A, B](
@@ -29,15 +30,11 @@ trait HydraFuture extends TypesBoth with Utils {
     }
 
   implicit class HydraFutureInSideOut[A, B](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       HydraFuture.inSideOut(v)(ec)
-  }
-
-  implicit class HydraFutureGetOrFailed[A, B](value: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
-      HydraFuture.getOrFailed(value)(ec)
+      HydraFuture.getOrFailed(v)(ec)
   }
 
   implicit class HydraFutureTransRecover[A](f: Future[A])

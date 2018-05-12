@@ -3,6 +3,7 @@ package pl.writeonly.scalaops.future.cats
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import pl.writeonly.scalaops.future.api.Ops.{
+  FutureVOps,
   GetOrFailed,
   InSideOut,
   TransRecover
@@ -30,13 +31,9 @@ trait ValidatedFuture extends TypesBoth with Utils {
     }
 
   implicit class ValidFutureInSideOut[A, B](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       ValidatedFuture.inSideOut(v)(ec)
-  }
-
-  implicit class ValidFutureGetOrFailed[A, B](v: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
       ValidatedFuture.getOrFailed(v)(ec)
   }
