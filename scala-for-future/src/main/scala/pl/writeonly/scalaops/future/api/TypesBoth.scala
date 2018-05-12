@@ -10,12 +10,11 @@ trait TypesBoth {
   type Recovered[B] = Value[Throwable, B]
   type RecoveredF[B] = Future[Recovered[B]]
 
+  type TransformSuccess[B] = B => Recovered[B]
+  type RecoverFailure[B] = Throwable => Recovered[B]
+
   def inSideOut[A, B](v: FutureV[A, B])(implicit ec: EC): ValueF[A, B]
 
   def getOrFailed[A, B](v: FutureV[A, B])(implicit ec: EC): Future[B]
-
-  def transRecover[A](value: Future[A])(implicit ec: EC): RecoveredF[A]
-
-//  def transSuccess[A](value: Future[A])(implicit ec: EC): RecoveredF[A]
 
 }

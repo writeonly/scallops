@@ -1,15 +1,10 @@
 package pl.writeonly.scalaops.future.library
 
-import pl.writeonly.scalaops.future.api.Ops.{
-  GetOrFailed,
-  InSideOut,
-  TransRecover
-}
+import pl.writeonly.scalaops.future.api.Ops.{FutureVOps, TransRecover}
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
 import pl.writeonly.scalaops.ops.EitherOps
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 trait EitherFuture extends TypesBoth with Utils with EitherOps {
   override type Value[A, B] = Either[A, B]
@@ -28,33 +23,20 @@ trait EitherFuture extends TypesBoth with Utils with EitherOps {
       case a: Left[A, B]       => a |> Future.successful
     }
 
-  override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => Right(s), t => Left(t))
-
-  def transSuccess[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transform({
-      case Success(s) => Success(Right(s))
-      case Failure(t) => Success(Left(t))
-    })
-
-  implicit class EitherFutureInSideOut[A, B](v: FutureV[A, B])
-      extends InSideOut[Value[A, B]] {
+  implicit class EitherFutureVOps[A, B](v: FutureV[A, B])
+      extends FutureVOps[Value[A, B], B] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
       EitherFuture.inSideOut(v)(ec)
-  }
-
-  implicit class EitherFutureGetOrFailed[A, B](value: FutureV[A, B])
-      extends GetOrFailed[B] {
     override def getOrFailed(implicit ec: EC): Future[B] =
-      EitherFuture.getOrFailed(value)(ec)
+      EitherFuture.getOrFailed(v)(ec)
   }
 
-  implicit class EitherFutureTransRecover[A](value: Future[A])
-      extends TransRecover[Recovered[A]] {
+  implicit class EitherFutureTransRecover[A](f: Future[A])
+      extends TransRecover[A, Recovered[A]](f) {
 
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      EitherFuture.transRecover(value)(ec)
+    override def transformSuccess = Right.apply
 
+    override def recoverFailure = Left.apply
   }
 
 }

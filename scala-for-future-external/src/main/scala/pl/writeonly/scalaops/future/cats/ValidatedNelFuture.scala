@@ -33,16 +33,6 @@ trait ValidatedNelFuture extends TypesBoth with Utils {
         a.e |> toThrowable[NonEmptyList[A]] |> Future.failed
     }
 
-  override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =
-    v.transformAndRecover((s: B) => Valid(s), {
-      case t => Validated.invalidNel(t)
-    })
-
-  //    value.transform({
-  //      case Success(s) => Success(Good(s))
-  //      case Failure(t) => Success(Bad(t))
-  //    })
-
   implicit class ValidFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
@@ -55,10 +45,13 @@ trait ValidatedNelFuture extends TypesBoth with Utils {
       ValidatedNelFuture.getOrFailed(v)(ec)
   }
 
-  implicit class ValidFutureTransRecover[B](v: Future[B])
-      extends TransRecover[Recovered[B]] {
-    override def transRecover(implicit ec: EC): RecoveredF[B] =
-      ValidatedNelFuture.transRecover(v)(ec)
+  implicit class ValidFutureTransRecover[B](f: Future[B])
+      extends TransRecover[B, Recovered[B]](f) {
+
+    override def transformSuccess: B => Recovered[B] = Validated.validNel
+
+    override def recoverFailure: Throwable => Recovered[B] =
+      Validated.invalidNel
   }
 
 }

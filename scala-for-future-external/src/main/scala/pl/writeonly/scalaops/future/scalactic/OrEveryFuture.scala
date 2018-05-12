@@ -46,11 +46,11 @@ trait OrEveryFuture extends TypesBoth with Utils {
       OrEveryFuture.getOrFailed(v)(ec)
   }
 
-  implicit class OrEveryFutureTransRecover[A](value: Future[A])
-      extends TransRecover[Recovered[A]] {
+  implicit class OrEveryFutureTransRecover[A](v: Future[A])
+      extends TransRecover[A, Recovered[A]](v) {
+    override def transformSuccess: A => Recovered[A] = Good(_)
 
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      OrEveryFuture.transRecover(value)(ec)
+    override def recoverFailure: Throwable => Recovered[A] = t => Bad(One(t))
   }
 
 }

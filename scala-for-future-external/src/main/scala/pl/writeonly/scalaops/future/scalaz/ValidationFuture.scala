@@ -28,14 +28,6 @@ trait ValidationFuture extends TypesBoth with Utils {
       case a: Failure[A]         => a |> toThrowable[Failure[A]] |> Future.failed
     }
 
-  override def transRecover[B](v: Future[B])(implicit ec: EC): RecoveredF[B] =
-    v.transformAndRecover(Validation.success, Validation.failure)
-
-  //    value.transform({
-  //      case Success(s) => Success(Good(s))
-  //      case Failure(t) => Success(Bad(t))
-  //    })
-
   implicit class SuccessFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
@@ -48,10 +40,12 @@ trait ValidationFuture extends TypesBoth with Utils {
       ValidationFuture.getOrFailed(v)(ec)
   }
 
-  implicit class SuccessFutureTransRecover[B](v: Future[B])
-      extends TransRecover[Recovered[B]] {
-    override def transRecover(implicit ec: EC): RecoveredF[B] =
-      ValidationFuture.transRecover(v)(ec)
+  implicit class SuccessFutureTransRecover[B](f: Future[B])
+      extends TransRecover[B, Recovered[B]](f) {
+
+    override def transformSuccess: B => Recovered[B] = Validation.success
+
+    override def recoverFailure: Throwable => Recovered[B] = Validation.failure
   }
 
 }

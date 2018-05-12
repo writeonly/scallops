@@ -45,11 +45,11 @@ trait OrFuture extends TypesBoth with Utils {
       OrFuture.getOrFailed(v)(ec)
   }
 
-  implicit class OrFutureTransRecover[A](value: Future[A])
-      extends TransRecover[Recovered[A]] {
+  implicit class OrFutureTransRecover[A](f: Future[A])
+      extends TransRecover[A, Recovered[A]](f) {
+    override def transformSuccess: A => Recovered[A] = Good(_)
 
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      OrFuture.transRecover(value)(ec)
+    override def recoverFailure: Throwable => Recovered[A] = Bad(_)
   }
 
 }

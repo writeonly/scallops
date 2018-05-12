@@ -28,14 +28,6 @@ trait HydraFuture extends TypesBoth with Utils {
       case a: -\/[A]         => a |> successful
     }
 
-  override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover((s: A) => \/-(s), t => -\/(t))
-
-  //    value.transform({
-  //      case Success(s) => Success(Right(s))
-  //      case Failure(t) => Success(Left(t))
-  //    })
-
   implicit class HydraFutureInSideOut[A, B](v: FutureV[A, B])
       extends InSideOut[Value[A, B]] {
     override def inSideOut(implicit ec: EC): ValueF[A, B] =
@@ -48,12 +40,11 @@ trait HydraFuture extends TypesBoth with Utils {
       HydraFuture.getOrFailed(value)(ec)
   }
 
-  implicit class HydraFutureTransRecover[A](value: Future[A])
-      extends TransRecover[Recovered[A]] {
+  implicit class HydraFutureTransRecover[A](f: Future[A])
+      extends TransRecover[A, Recovered[A]](f) {
+    override def transformSuccess: A => Recovered[A] = \/.right
 
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      HydraFuture.transRecover(value)(ec)
-
+    override def recoverFailure: Throwable => Recovered[A] = \/.left
   }
 
 }

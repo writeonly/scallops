@@ -27,14 +27,6 @@ trait MaybeFuture extends TypesRight with Utils {
       case a: Empty[A]        => Future.successful(a)
     }
 
-  override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover(Maybe.just, _ => Maybe.empty)
-
-  //    value.transform({
-  //      case Success(s) => Success(Option(s))
-  //      case Failure(_) => Success(Empty())
-  //    })
-
   implicit class OptFutureGetOrFailed[A](v: FutureV[A]) extends GetOrFailed[A] {
     override def getOrFailed(implicit ec: EC): Future[A] =
       MaybeFuture.getOrFailed(v)(ec)
@@ -46,10 +38,11 @@ trait MaybeFuture extends TypesRight with Utils {
       MaybeFuture.inSideOut(v)(ec)
   }
 
-  implicit class OptFutureTransRecover[A](v: Future[A])
-      extends TransRecover[Value[A]] {
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      MaybeFuture.transRecover(v)(ec)
+  implicit class OptFutureTransRecover[A](f: Future[A])
+      extends TransRecover[A, Value[A]](f) {
+    override def transformSuccess: A => Maybe[A] = Maybe.just
+
+    override def recoverFailure: Throwable => Maybe[A] = _ => Maybe.empty
   }
 
 }

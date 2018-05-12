@@ -1,10 +1,6 @@
 package pl.writeonly.scalaops.future.library
 
-import pl.writeonly.scalaops.future.api.Ops.{
-  GetOrFailed,
-  InSideOut,
-  TransRecover
-}
+import pl.writeonly.scalaops.future.api.Ops.{FutureVOps, TransRecover}
 import pl.writeonly.scalaops.future.api.{EC, TypesRight, Utils}
 
 import scala.concurrent.Future
@@ -26,27 +22,20 @@ trait TryFuture extends TypesRight with Utils {
       case a: Failure[A]         => a |> Future.successful
     }
 
-  override def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A] =
-    v.transformAndRecover(Success.apply, Failure.apply)
-
-  implicit class TryFutureGetOrFailed[A](value: FutureV[A])
-      extends GetOrFailed[A] {
+  implicit class TryFutureVOps[A](value: FutureV[A])
+      extends FutureVOps[Value[A], A] {
+    override def inSideOut(implicit ec: EC): ValueF[A] =
+      TryFuture.inSideOut(value)(ec)
     override def getOrFailed(implicit ec: EC): Future[A] =
       TryFuture.getOrFailed(value)(ec)
   }
 
-  implicit class TryFutureInSideOut[A](value: FutureV[A])
-      extends InSideOut[Value[A]] {
-    override def inSideOut(implicit ec: EC): ValueF[A] =
-      TryFuture.inSideOut(value)(ec)
-  }
+  implicit class TryFutureTransRecover[A](f: Future[A])
+      extends TransRecover[A, Recovered[A]](f) {
 
-  implicit class TryFutureTransRecover[A](value: Future[A])
-      extends TransRecover[Recovered[A]] {
+    override def transformSuccess = Success.apply
 
-    override def transRecover(implicit ec: EC): RecoveredF[A] =
-      TryFuture.transRecover(value)(ec)
-
+    override def recoverFailure = Failure.apply
   }
 
 }

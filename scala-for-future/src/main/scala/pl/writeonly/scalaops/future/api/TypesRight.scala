@@ -14,5 +14,4 @@ trait TypesRight {
 
   def getOrFailed[A](v: FutureV[A])(implicit ec: EC): Future[A]
 
-  def transRecover[A](v: Future[A])(implicit ec: EC): RecoveredF[A]
 }
