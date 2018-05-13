@@ -41,6 +41,7 @@ scalastyleFailOnError := true
 
 val ScalaticVersion = "3.0.4"
 val ScalaLibraryVersion = "2.12.4"
+val AkkaVersion = "2.5.12"
 
 lazy val versionSnapshot = s"$ScalaticVersion-SNAPSHOT"
 
@@ -50,8 +51,8 @@ lazy val commonSettings = Seq(
   version := versionSnapshot
 )
 
-lazy val IntegrationTest = config("it") extend (Test)
-lazy val End2EndTest = config("et") extend (Test)
+lazy val IntegrationTest = config("it") extend  Test
+lazy val End2EndTest = config("et") extend Test
 
 logBuffered in Test := false
 testOptions in Test ++= Seq(
@@ -103,7 +104,10 @@ lazy val logging = (project in file("scala-logging"))
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
       "org.scalactic" %% "scalactic" % ScalaticVersion,
-      "com.typesafe.akka" %% "akka-actor" % "2.5.12"
+      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
+      "ch.qos.logback" % "logback-classic" % "1.2.3"
     )
   )
 
@@ -159,8 +163,8 @@ lazy val ops = (project in file("scala-ops"))
     whiteSetting, graySetting, blackSetting,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
-      "org.scalactic" %% "scalactic" % ScalaticVersion,
-      "org.typelevel" %% "cats-core" % "1.1.0"
+//      "org.scalactic" %% "scalactic" % ScalaticVersion,
+//      "org.typelevel" %% "cats-core" % "1.1.0"
     )
   )
 
