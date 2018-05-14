@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.ops
+package pl.writeonly.scalaops.ops.mono
 
 import scala.util.{Failure, Success, Try}
 
@@ -9,6 +9,8 @@ trait EitherOps {
       case Right(a) => a |> Success[A]
       case Left(b)  => b |> toThrowable[B] |> Failure[A]
     }
+
+    override def mapOrElse[C](f: A => C)(b: C): C = value.map(f).getOrElse(b)
   }
 
 }

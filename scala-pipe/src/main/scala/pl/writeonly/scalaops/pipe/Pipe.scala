@@ -10,12 +10,12 @@ trait Pipe {
     def ??(b: => A): A = if (a) a else b
 
     def $$[B](f: A => B): A = {
-      f(a);
+      f(a)
       a
     }
 
     def #!(str: String = ""): A = {
-      println(str + a);
+      println(str + a)
       a
     }
   }

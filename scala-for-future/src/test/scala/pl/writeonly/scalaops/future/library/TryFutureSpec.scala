@@ -6,7 +6,7 @@ import pl.writeonly.scalaops.future.RemoteService.{
   Result,
   ResultF
 }
-import pl.writeonly.scalaops.ops.TryOps
+import pl.writeonly.scalaops.ops.mono.TryOps
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
 
 import scala.concurrent.Future

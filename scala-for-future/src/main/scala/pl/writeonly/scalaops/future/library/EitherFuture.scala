@@ -2,7 +2,7 @@ package pl.writeonly.scalaops.future.library
 
 import pl.writeonly.scalaops.future.api.Ops.{FutureVOps, TransRecover}
 import pl.writeonly.scalaops.future.api.{EC, TypesBoth, Utils}
-import pl.writeonly.scalaops.ops.EitherOps
+import pl.writeonly.scalaops.ops.mono.EitherOps
 
 import scala.concurrent.Future
 

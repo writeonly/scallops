@@ -5,7 +5,7 @@ import pl.writeonly.scalaops.specs.WhiteAssertSpec
 
 class AutoCloseableOpsAssertSpec extends WhiteAssertSpec {
 
-  "A AutoCloseableOps" when {
+  "An AutoCloseableOps" when {
     "s is true" should {
       val s = true
       "pipe return stream.isInstanceOf[StreamerPipeForeach]" in {
