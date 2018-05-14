@@ -1,13 +1,8 @@
 package pl.writeonly.scalaops.future.scalaz
 
-import pl.writeonly.scalaops.future.api.Ops.{
-  FutureVOps,
-  GetOrFailed,
-  InSideOut,
-  TransRecover
-}
+import pl.writeonly.scalaops.future.api.Ops.{FutureVOps, TransRecover}
 import pl.writeonly.scalaops.future.api.{EC, TypesRight, Utils}
-import pl.writeonly.scalaops.ops.ToThrowableException.ToThrowable0Exception
+import pl.writeonly.scalaops.ops.mono.api.ToThrowableException.ToThrowable0Exception
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}
 

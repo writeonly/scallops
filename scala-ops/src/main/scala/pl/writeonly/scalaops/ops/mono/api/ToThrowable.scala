@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.ops
+package pl.writeonly.scalaops.ops.mono.api
 
 trait ToThrowable {
 

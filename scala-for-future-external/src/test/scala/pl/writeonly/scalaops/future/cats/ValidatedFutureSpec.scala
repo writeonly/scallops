@@ -4,7 +4,7 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
-import pl.writeonly.scalaops.ops.ToThrowableException
+import pl.writeonly.scalaops.ops.mono.api.ToThrowableException
 
 import scala.concurrent.Future
 

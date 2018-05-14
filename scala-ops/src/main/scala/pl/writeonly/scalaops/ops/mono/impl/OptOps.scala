@@ -1,4 +1,6 @@
-package pl.writeonly.scalaops.ops.mono
+package pl.writeonly.scalaops.ops.mono.impl
+
+import pl.writeonly.scalaops.ops.mono.api.{PipeRightOps, ValueOpsLike}
 
 import scala.util.{Failure, Success, Try}
 
@@ -13,6 +15,12 @@ trait OptOps {
 
     override def mapOrElse[B](f: A => B)(b: B): B = value.map(f).getOrElse(b)
 
+  }
+
+  implicit class OptionPipeRightOps[A](a: A) extends PipeRightOps[A, Option] {
+    def pipeFold[B](b: Option[B])(f: F[B]): A = b.fold(a)(f(a, _))
+
+    def pipeMap[B](b: Option[B])(f: F[B]): A = b.mapOrElse(f(a, _))(a)
   }
 
 }

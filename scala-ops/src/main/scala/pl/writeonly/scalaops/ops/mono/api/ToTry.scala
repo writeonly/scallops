@@ -1,6 +1,6 @@
-package pl.writeonly.scalaops.ops.mono
+package pl.writeonly.scalaops.ops.mono.api
 
-import pl.writeonly.scalaops.ops.ToThrowable
+import pl.writeonly.scalaops.ops.mono.impl.TryOps
 import pl.writeonly.scalaops.pipe.Pipe
 
 import scala.concurrent.Future

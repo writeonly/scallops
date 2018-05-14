@@ -2,7 +2,7 @@ package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.RemoteService
 import pl.writeonly.scalaops.future.RemoteService.ResultF
-import pl.writeonly.scalaops.ops.ToThrowableException
+import pl.writeonly.scalaops.ops.mono.api.ToThrowableException
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
 import scalaz.Maybe
 import scalaz.Maybe.{Empty, Just}

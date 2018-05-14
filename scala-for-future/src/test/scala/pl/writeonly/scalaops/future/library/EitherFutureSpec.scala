@@ -6,7 +6,7 @@ import pl.writeonly.scalaops.future.RemoteService.{
   ResultF
 }
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
-import pl.writeonly.scalaops.ops.ToThrowableException
+import pl.writeonly.scalaops.ops.mono.api.ToThrowableException
 
 import scala.concurrent.Future
 

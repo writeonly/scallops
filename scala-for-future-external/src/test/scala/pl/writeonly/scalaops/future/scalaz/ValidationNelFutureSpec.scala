@@ -2,7 +2,7 @@ package pl.writeonly.scalaops.future.scalaz
 
 import pl.writeonly.scalaops.future.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.future.{RemoteService, WhiteFutureSpecWithEither}
-import pl.writeonly.scalaops.ops.ToThrowableException
+import pl.writeonly.scalaops.ops.mono.api.ToThrowableException
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 
 import scala.concurrent.Future
