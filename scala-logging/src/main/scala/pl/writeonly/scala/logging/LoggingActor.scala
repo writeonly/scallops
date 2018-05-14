@@ -24,11 +24,6 @@ class LoggingActor(logging: DiagnosticLoggingAdapter) extends Actor {
         logging.warning(message)
       }
 
-    case Notify(Notify.WarningLevel, None, message, mdc) =>
-      log(mdc) {
-        logging.warning(message)
-      }
-
     case Notify(Notify.InfoLevel, None, message, mdc) =>
       log(mdc) {
         logging.info(message)

@@ -9,7 +9,7 @@ class LoggingWrapper(logging: LoggingAdapter, actorRef: ActorRef) {
   private def notifyError(message: String, mdc: MDC): Unit =
     actorRef ! Notify.errorNotify(message, mdc)
   private def notifyError(cause: Throwable, message: String, mdc: MDC): Unit =
-    actorRef ! Notify.errorNotify(message, mdc)
+    actorRef ! Notify.errorNotify(cause, message, mdc)
   private def notifyWarning(message: String, mdc: MDC): Unit =
     actorRef ! Notify.warningNotify(message, mdc)
   private def notifyInfo(message: String, mdc: MDC): Unit =

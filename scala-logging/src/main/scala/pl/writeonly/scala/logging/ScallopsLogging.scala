@@ -1,7 +1,7 @@
 package pl.writeonly.scala.logging
 
 import akka.actor.{ActorRef, ActorSystem, ExtendedActorSystem, Props}
-import akka.event._
+import akka.event.{LoggingFilter, _}
 
 trait ScallopsLogging {
   protected def actorSystem: ActorSystem
@@ -20,11 +20,9 @@ object ScallopsLogging {
   def getLogger(system: ActorSystem,
                 logSource: AnyRef): DiagnosticLoggingAdapter = {
     val (str, clazz) = LogSource.fromAnyRef(logSource, system)
-    new BusLogging(
-      system.eventStream,
-      str,
-      clazz,
-      system.asInstanceOf[ExtendedActorSystem].logFilter
-    ) with DiagnosticLoggingAdapter
+    val eventStream = system.eventStream
+    val loggingFilter = system.asInstanceOf[ExtendedActorSystem].logFilter
+    new BusLogging(eventStream, str, clazz, loggingFilter)
+    with DiagnosticLoggingAdapter
   }
 }
