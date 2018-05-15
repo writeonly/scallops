@@ -93,11 +93,11 @@ lazy val scallops = (project in file("."))
     )
   )
 
-lazy val logging = (project in file("scala-logging"))
+lazy val logging = (project in file("scallops-logging"))
   .dependsOn(specs, pipe, ops)
   .configs(IntegrationTest, End2EndTest)
   .settings(
-    name := "scala-logging",
+    name := "scallops-logging",
     commonSettings,
     integrationInConfig, end2endInConfig,
     whiteSetting, graySetting, blackSetting,

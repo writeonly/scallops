@@ -1,7 +1,7 @@
-package pl.writeonly.scala.logging
+package pl.writeonly.scallops.logging
 
 import akka.actor.{ActorRef, ActorSystem, ExtendedActorSystem, Props}
-import akka.event.{LoggingFilter, _}
+import akka.event._
 
 trait ScallopsLogging {
   protected def actorSystem: ActorSystem

@@ -1,4 +1,4 @@
-package pl.writeonly.scala.logging
+package pl.writeonly.scallops.logging
 
 import akka.actor.Actor
 import akka.event.Logging.MDC
