@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.scalactic
+package pl.writeonly.scalaops.monoid.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
 import pl.writeonly.scalaops.RemoteService.ClientException

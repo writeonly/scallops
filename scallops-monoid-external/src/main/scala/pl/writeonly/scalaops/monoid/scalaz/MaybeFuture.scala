@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.scalaz
+package pl.writeonly.scalaops.monoid.scalaz
 
 import pl.writeonly.scalaops.monoid.api.future.Ops.{FutureVOps, TransRecover}
 import pl.writeonly.scalaops.monoid.api.future.{EC, TypesRight, Utils}

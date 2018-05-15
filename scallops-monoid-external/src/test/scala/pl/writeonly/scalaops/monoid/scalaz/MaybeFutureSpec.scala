@@ -1,21 +1,23 @@
-package pl.writeonly.scalaops.scalaz
+package pl.writeonly.scalaops.monoid.scalaz
 
-import pl.writeonly.scalaops.RemoteService.{ClientException, ResultF}
+import pl.writeonly.scalaops.RemoteService
+import pl.writeonly.scalaops.RemoteService.ResultF
 import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
-import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
-import scalaz.{-\/, \/, \/-}
+import pl.writeonly.scalaops.specs.WhiteFutureSpec
+import scalaz.Maybe
+import scalaz.Maybe.{Empty, Just}
 
 import scala.concurrent.Future
 
-class HydraFutureSpec extends WhiteFutureSpecWithEither with HydraFuture {
-  describe("A Hydra ") {
-    describe("for Right with successful") {
-      val v: String \/ ResultF = \/-[ResultF](Future.successful(1))
+class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
+  describe("A Maybe") {
+    describe("for Just with successful") {
+      val v: Maybe[ResultF] = Maybe.just(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe \/-(1)
+          i shouldBe Just(1)
         }
       }
       it("getOrFailed") {
@@ -25,38 +27,36 @@ class HydraFutureSpec extends WhiteFutureSpecWithEither with HydraFuture {
           i shouldBe 1
         }
       }
-      it("getOrFailed and transRecover") {
+      it("transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe \/-(1)
+          i shouldBe Just(1)
         }
       }
     }
-    describe("for Left") {
-      val v: String \/ ResultF = -\/(RemoteService.InternalServerError)
+    describe("for Empty") {
+      val v: Maybe[ResultF] = Maybe.empty[ResultF]
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe -\/(RemoteService.InternalServerError)
+          i shouldBe Empty()
         }
       }
       it("getOrFailed") {
         recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
-          } yield {
-            i shouldBe 1
-          }
+          } yield i
 
         }
       }
-      it("getOrFailed and transRecover") {
+      it("transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i.toEither.left.value shouldBe a[ToThrowableException]
+          i shouldBe Empty()
         }
       }
     }
@@ -65,16 +65,18 @@ class HydraFutureSpec extends WhiteFutureSpecWithEither with HydraFuture {
         for {
           s <- RemoteService.successful1.transRecover
         } yield {
-          s shouldBe \/-(1)
+          s shouldBe Just(1)
         }
       }
       it("for failed") {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe -\/(ClientException())
+          f shouldBe Empty()
         }
       }
     }
+
   }
+
 }

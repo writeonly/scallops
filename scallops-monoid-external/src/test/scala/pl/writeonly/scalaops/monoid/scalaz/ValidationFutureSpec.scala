@@ -1,23 +1,24 @@
-package pl.writeonly.scalaops.scalaz
+package pl.writeonly.scalaops.monoid.scalaz
 
-import pl.writeonly.scalaops.RemoteService
-import pl.writeonly.scalaops.RemoteService.ResultF
+import pl.writeonly.scalaops.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
-import pl.writeonly.scalaops.specs.WhiteFutureSpec
-import scalaz.Maybe
-import scalaz.Maybe.{Empty, Just}
+import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
+import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future
 
-class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
-  describe("A Maybe") {
-    describe("for Just with successful") {
-      val v: Maybe[ResultF] = Maybe.just(Future.successful(1))
+class ValidationFutureSpec
+    extends WhiteFutureSpecWithEither
+    with ValidationFuture {
+  describe("A Validation") {
+    describe("for Success with successful") {
+      val v: Validation[String, ResultF] =
+        Validation.success(Future.successful(1))
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Just(1)
+          i shouldBe Success(1)
         }
       }
       it("getOrFailed") {
@@ -27,36 +28,38 @@ class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
           i shouldBe 1
         }
       }
-      it("transRecover") {
+      it("getOrFailed and transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Just(1)
+          i shouldBe Success(1)
         }
       }
     }
-    describe("for Empty") {
-      val v: Maybe[ResultF] = Maybe.empty[ResultF]
+    describe("for Validation with successful") {
+      val v: Validation[String, ResultF] =
+        Validation.failure(RemoteService.InternalServerError)
       it("inSideOut") {
         for {
           i <- v.inSideOut
         } yield {
-          i shouldBe Empty()
+          i shouldBe Failure(RemoteService.InternalServerError)
         }
       }
       it("getOrFailed") {
         recoverToSucceededIf[ToThrowableException] {
           for {
             i <- v.getOrFailed
-          } yield i
-
+          } yield {
+            i shouldBe 1
+          }
         }
       }
-      it("transRecover") {
+      it("getOrFailed and transRecover") {
         for {
           i <- v.getOrFailed.transRecover
         } yield {
-          i shouldBe Empty()
+          i.toEither.left.value shouldBe a[ToThrowableException]
         }
       }
     }
@@ -65,18 +68,16 @@ class MaybeFutureSpec extends WhiteFutureSpec with MaybeFuture {
         for {
           s <- RemoteService.successful1.transRecover
         } yield {
-          s shouldBe Just(1)
+          s shouldBe Success(1)
         }
       }
       it("for failed") {
         for {
           f <- RemoteService.failed0InternalServerError.transRecover
         } yield {
-          f shouldBe Empty()
+          f shouldBe Failure(ClientException())
         }
       }
     }
-
   }
-
 }

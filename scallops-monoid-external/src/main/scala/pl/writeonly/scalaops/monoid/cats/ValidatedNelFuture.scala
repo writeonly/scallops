@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.cats
+package pl.writeonly.scalaops.monoid.cats
 
 import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, Validated, ValidatedNel}

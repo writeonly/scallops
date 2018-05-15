@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.scalactic
+package pl.writeonly.scalaops.monoid.scalactic
 
 import org.scalactic.{Bad, Good, Or}
 import pl.writeonly.scalaops.monoid.api.future.Ops.{FutureVOps, TransRecover}
