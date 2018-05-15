@@ -77,8 +77,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scallops = (project in file("."))
   //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, futureSpecs, future, futureExternal, logging)
-  .dependsOn(specs, ops, pipe, futureSpecs, future, futureExternal, logging)
+  .aggregate(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, logging)
+  .dependsOn(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, logging)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaops",
@@ -111,8 +111,8 @@ lazy val logging = (project in file("scallops-logging"))
     )
   )
 
-lazy val futureExternal = (project in file("scala-for-future-external"))
-  .dependsOn(specs, pipe, ops, futureSpecs, future)
+lazy val monoidExternal = (project in file("scalalops-monoid-external"))
+  .dependsOn(specs, pipe, ops, monoidSpecs, monoid)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scala-for-future-external",
@@ -127,8 +127,8 @@ lazy val futureExternal = (project in file("scala-for-future-external"))
     )
   )
 
-lazy val future = (project in file("scala-for-future"))
-  .dependsOn(specs, pipe, ops, futureSpecs)
+lazy val monoid = (project in file("scallops-monoid"))
+  .dependsOn(specs, pipe, ops, monoidSpecs)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scala-for-future",
@@ -140,7 +140,7 @@ lazy val future = (project in file("scala-for-future"))
     )
   )
 
-lazy val futureSpecs = (project in file("scala-for-future-specs"))
+lazy val monoidSpecs = (project in file("scallops-monoid-specs"))
   .dependsOn(specs, pipe, ops)
   .configs(IntegrationTest, End2EndTest)
   .settings(
