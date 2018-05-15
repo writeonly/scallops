@@ -1,6 +1,6 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
-import pl.writeonly.scalaops.api.present.{PipeRightOps, TryOpsLike}
+import pl.writeonly.scalaops.monoid.api.present.{PipeRightOps, TryOpsLike}
 
 import scala.concurrent.Future
 import scala.util.Try

@@ -1,6 +1,6 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
-import pl.writeonly.scalaops.api.present.{PipeRightOps, ValueOpsLike}
+import pl.writeonly.scalaops.monoid.api.present.{PipeRightOps, ValueOpsLike}
 
 import scala.util.{Failure, Success, Try}
 

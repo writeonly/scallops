@@ -1,7 +1,7 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
 import pl.writeonly.scalaops.RemoteService.{ClientException, Result, ResultF}
-import pl.writeonly.scalaops.api.present.ToThrowableException
+import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
 import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
 
 import scala.concurrent.Future

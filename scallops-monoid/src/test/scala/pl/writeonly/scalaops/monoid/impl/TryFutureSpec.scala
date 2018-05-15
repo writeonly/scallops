@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
 import pl.writeonly.scalaops.RemoteService
 import pl.writeonly.scalaops.RemoteService.{ClientException, Result, ResultF}

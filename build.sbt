@@ -111,7 +111,7 @@ lazy val logging = (project in file("scallops-logging"))
     )
   )
 
-lazy val monoidExternal = (project in file("scalalops-monoid-external"))
+lazy val monoidExternal = (project in file("scallops-monoid-external"))
   .dependsOn(specs, pipe, ops, monoidSpecs, monoid)
   .configs(IntegrationTest, End2EndTest)
   .settings(

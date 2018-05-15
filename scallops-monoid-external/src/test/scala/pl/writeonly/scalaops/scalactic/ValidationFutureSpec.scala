@@ -2,7 +2,7 @@ package pl.writeonly.scalaops.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
 import pl.writeonly.scalaops.RemoteService.ClientException
-import pl.writeonly.scalaops.api.present.ToThrowableException
+import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
 import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
 
 import scala.runtime.BoxedUnit

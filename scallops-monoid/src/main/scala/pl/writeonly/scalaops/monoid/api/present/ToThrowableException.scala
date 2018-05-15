@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.api.present
+package pl.writeonly.scalaops.monoid.api.present
 
 sealed abstract class ToThrowableException(massage: String)
     extends IllegalStateException(massage)

@@ -1,8 +1,8 @@
 package pl.writeonly.scalaops.scalactic
 
 import org.scalactic.{Fail, Pass, Validation}
-import pl.writeonly.scalaops.api.future.Ops.{InSideOut, TransRecover}
-import pl.writeonly.scalaops.api.future.{EC, TypesLeft, Utils}
+import pl.writeonly.scalaops.monoid.api.future.Ops.{InSideOut, TransRecover}
+import pl.writeonly.scalaops.monoid.api.future.{EC, TypesLeft, Utils}
 
 import scala.concurrent.Future
 

@@ -1,8 +1,8 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
-import pl.writeonly.scalaops.api.future.Ops.{FutureVOps, TransRecover}
-import pl.writeonly.scalaops.api.future.{EC, TypesRight, Utils}
-import pl.writeonly.scalaops.api.present.ToThrowableException.ToThrowable0Exception
+import pl.writeonly.scalaops.monoid.api.future.Ops.{FutureVOps, TransRecover}
+import pl.writeonly.scalaops.monoid.api.future.{EC, TypesRight, Utils}
+import pl.writeonly.scalaops.monoid.api.present.ToThrowableException.ToThrowable0Exception
 
 import scala.concurrent.Future
 

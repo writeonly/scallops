@@ -1,7 +1,7 @@
 package pl.writeonly.scalaops.scalaz
 
-import pl.writeonly.scalaops.api.future.Ops.{FutureVOps, TransRecover}
-import pl.writeonly.scalaops.api.future.{EC, TypesBoth, Utils}
+import pl.writeonly.scalaops.monoid.api.future.Ops.{FutureVOps, TransRecover}
+import pl.writeonly.scalaops.monoid.api.future.{EC, TypesBoth, Utils}
 import scalaz.{Failure, Success, Validation}
 
 import scala.concurrent.Future

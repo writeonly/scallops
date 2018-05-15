@@ -1,7 +1,7 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
-import pl.writeonly.scalaops.api.future.EC
-import pl.writeonly.scalaops.api.future.Ops.InSideOut
+import pl.writeonly.scalaops.monoid.api.future.EC
+import pl.writeonly.scalaops.monoid.api.future.Ops.InSideOut
 
 import scala.concurrent.Future
 

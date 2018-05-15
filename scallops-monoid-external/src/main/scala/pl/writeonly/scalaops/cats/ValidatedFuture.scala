@@ -2,8 +2,8 @@ package pl.writeonly.scalaops.cats
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import pl.writeonly.scalaops.api.future.Ops.{FutureVOps, TransRecover}
-import pl.writeonly.scalaops.api.future.{EC, TypesBoth, Utils}
+import pl.writeonly.scalaops.monoid.api.future.Ops.{FutureVOps, TransRecover}
+import pl.writeonly.scalaops.monoid.api.future.{EC, TypesBoth, Utils}
 
 import scala.concurrent.Future
 

@@ -1,7 +1,7 @@
 package pl.writeonly.scalaops.scalaz
 
 import pl.writeonly.scalaops.RemoteService.{ClientException, ResultF}
-import pl.writeonly.scalaops.api.present.ToThrowableException
+import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
 import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
 import scalaz.{Failure, NonEmptyList, Success, Validation, ValidationNel}
 

@@ -5,7 +5,7 @@ import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 import pl.writeonly.scalaops.RemoteService.{ClientException, ResultF}
 import pl.writeonly.scalaops.RemoteTuple.RemoteTuple3
-import pl.writeonly.scalaops.api.present.ToThrowableException
+import pl.writeonly.scalaops.monoid.api.present.ToThrowableException
 import pl.writeonly.scalaops.{RemoteService, WhiteFutureSpecWithEither}
 
 import scala.concurrent.Future

@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.api.present
+package pl.writeonly.scalaops.monoid.api.present
 
 trait PipeBothOps[A, M[_, _]] {
   type F[B] = (A, B) => A

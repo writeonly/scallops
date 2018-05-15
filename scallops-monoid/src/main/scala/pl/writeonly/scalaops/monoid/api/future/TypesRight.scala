@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.api.future
+package pl.writeonly.scalaops.monoid.api.future
 
 import scala.concurrent.Future
 

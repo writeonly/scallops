@@ -1,6 +1,6 @@
-package pl.writeonly.scalaops.api.present
+package pl.writeonly.scalaops.monoid.api.present
 
-import pl.writeonly.scalaops.impl.TryOps
+import pl.writeonly.scalaops.monoid.impl.TryOps
 import pl.writeonly.scalaops.pipe.Pipe
 
 import scala.concurrent.Future

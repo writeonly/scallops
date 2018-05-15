@@ -1,4 +1,4 @@
-package pl.writeonly.scalaops.impl
+package pl.writeonly.scalaops.monoid.impl
 
 import SeqFuture._
 import pl.writeonly.scalaops.specs.WhiteFutureSpec
