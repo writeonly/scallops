@@ -77,8 +77,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scallops = (project in file("."))
   //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped, logging)
-  .dependsOn(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped, logging)
+  .aggregate(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped)
+  .dependsOn(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaops",
@@ -95,19 +95,6 @@ lazy val scallops = (project in file("."))
 
 
 
-lazy val logging = (project in file("scallops-logging"))
-  .dependsOn(specs, pipe, ops, loggingCommon)
-  .configs(IntegrationTest, End2EndTest)
-  .settings(
-    name := "scallops-logging",
-    commonSettings,
-    integrationInConfig, end2endInConfig,
-    whiteSetting, graySetting, blackSetting,
-    libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
-      "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion
-    )
-  )
 
 lazy val loggingTyped = (project in file("scallops-logging-typed"))
   .dependsOn(specs, pipe, ops, loggingCommon)

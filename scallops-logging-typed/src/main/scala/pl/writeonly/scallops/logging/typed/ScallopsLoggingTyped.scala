@@ -2,7 +2,6 @@ package pl.writeonly.scallops.logging.typed
 
 import akka.actor.{ActorSystem, TypedActor, TypedProps}
 import akka.event.DiagnosticLoggingAdapter
-import pl.writeonly.scallops.logging.actor.DiagnosticLoggingAdapterCreator
 import pl.writeonly.scallops.logging.common._
 
 trait ScallopsLoggingTyped extends ScallopsLoggingLike {
