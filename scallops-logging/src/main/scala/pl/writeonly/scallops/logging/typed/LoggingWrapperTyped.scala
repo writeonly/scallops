@@ -13,33 +13,20 @@ import pl.writeonly.scallops.logging.common.{
 class LoggingWrapperTyped(logging: LoggingAdapter, actorRef: LoggingLike)
     extends LoggingWrapperLike(logging) {
 
-  def error(cause: Throwable, template: String, seq: Any*)(
-    implicit mdc: MDC
-  ): Unit =
-    if (isErrorEnabled) {
-      actorRef.error(cause, format(template, seq), mdc)
-    }
+  protected def error(cause: Throwable, message: String, mdc: MDC): Unit =
+    actorRef.error(cause, message, mdc)
 
-  def error(template: String, seq: Any*)(implicit mdc: MDC): Unit =
-    if (isErrorEnabled) {
-      actorRef.error(format(template, seq), mdc)
-    }
+  protected def error(message: String, mdc: MDC): Unit =
+    actorRef.error(message, mdc)
 
-  def warning(template: String, seq: Any*)(implicit mdc: MDC): Unit =
-    if (isWarningEnabled) {
-      actorRef.warning(format(template, seq), mdc)
-    }
+  protected def warning(message: String, mdc: MDC): Unit =
+    actorRef.warning(message, mdc)
 
-  def info(template: String, seq: Any*)(implicit mdc: MDC): Unit =
-    if (isInfoEnabled) {
-      actorRef.info(format(template, seq), mdc)
-    }
+  protected def info(message: String, mdc: MDC): Unit =
+    actorRef.info(message, mdc)
 
-  def debug(template: String, seq: Any*)(implicit mdc: MDC): Unit =
-    if (isDebugEnabled) {
-      actorRef.debug(format(template, seq), mdc)
-    }
-
+  protected def debug(message: String, mdc: MDC): Unit =
+    actorRef.debug(message, mdc)
 }
 
 object LoggingWrapperTyped {

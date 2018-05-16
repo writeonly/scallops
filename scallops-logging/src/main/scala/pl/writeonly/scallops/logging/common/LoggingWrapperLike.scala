@@ -20,16 +20,41 @@ abstract class LoggingWrapperLike(logging: LoggingAdapter) {
   final def isDebugEnabled(implicit mdc: MDC): Boolean =
     logging.isDebugEnabled
 
-  def error(cause: Throwable, template: String, seq: Any*)(
+  final def error(cause: Throwable, template: String, seq: Any*)(
     implicit mdc: MDC
-  ): Unit
+  ): Unit =
+    if (isErrorEnabled) {
+      error(cause, format(template, seq), mdc)
+    }
 
-  def error(template: String, seq: Any*)(implicit mdc: MDC): Unit
+  final def error(template: String, seq: Any*)(implicit mdc: MDC): Unit =
+    if (isErrorEnabled) {
+      error(format(template, seq), mdc)
+    }
 
-  def warning(template: String, seq: Any*)(implicit mdc: MDC): Unit
+  final def warning(template: String, seq: Any*)(implicit mdc: MDC): Unit =
+    if (isWarningEnabled) {
+      warning(format(template, seq), mdc)
+    }
 
-  def info(template: String, seq: Any*)(implicit mdc: MDC): Unit
+  final def info(template: String, seq: Any*)(implicit mdc: MDC): Unit =
+    if (isInfoEnabled) {
+      info(format(template, seq), mdc)
+    }
 
-  def debug(template: String, seq: Any*)(implicit mdc: MDC): Unit
+  final def debug(template: String, seq: Any*)(implicit mdc: MDC): Unit =
+    if (isDebugEnabled) {
+      debug(format(template, seq), mdc)
+    }
+
+  protected def error(cause: Throwable, message: String, mdc: MDC): Unit
+
+  protected def error(message: String, mdc: MDC): Unit
+
+  protected def warning(message: String, mdc: MDC): Unit
+
+  protected def info(message: String, mdc: MDC): Unit
+
+  protected def debug(message: String, mdc: MDC): Unit
 
 }

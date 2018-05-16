@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.event.Logging.MDC
 import pl.writeonly.scalaops.specs.GrayScalarSpec
 
-class ScallopsLogginTypedScalarSpec extends GrayScalarSpec {
+class ScallopsLoggingTypedScalarSpec extends GrayScalarSpec {
   it should "log message use logger" in {
     implicit val mdc: MDC = Map("key" -> "value")
 
