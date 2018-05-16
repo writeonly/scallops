@@ -25,7 +25,7 @@ abstract class LoggingWrapperLike(logging: LoggingAdapter)
     implicit mdc: MDC
   ): Unit =
     if (isErrorEnabled) {
-      error(mdc, cause, format(template, seq))
+      error(mdc, format(template, seq), cause)
     }
 
   final def error(template: String, seq: Any*)(implicit mdc: MDC): Unit =

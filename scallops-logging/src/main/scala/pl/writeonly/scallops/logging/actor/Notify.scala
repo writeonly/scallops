@@ -1,26 +1,27 @@
 package pl.writeonly.scallops.logging.actor
 
 import akka.event.Logging.MDC
+import pl.writeonly.scallops.logging.common.MdcLogging
 
 final case class Notify(level: Int,
                         mdc: MDC,
                         message: String,
                         cause: Option[Throwable])
 
-object Notify {
+object Notify extends MdcLogging[Notify] {
   val ErrorLevel = 4
   val WarningLevel = 3
   val InfoLevel = 2
   val DebugLevel = 1
 
-  def errorNotify(cause: Throwable, message: String, mdc: MDC) =
+  def error(mdc: MDC, message: String, cause: Throwable): Notify =
     Notify(ErrorLevel, mdc, message, Option(cause))
-  def errorNotify(message: String, mdc: MDC) =
+  def error(mdc: MDC, message: String): Notify =
     Notify(ErrorLevel, mdc, message, None)
-  def warningNotify(message: String, mdc: MDC) =
+  def warning(mdc: MDC, message: String): Notify =
     Notify(WarningLevel, mdc, message, None)
-  def infoNotify(message: String, mdc: MDC) =
+  def info(mdc: MDC, message: String): Notify =
     Notify(InfoLevel, mdc, message, None)
-  def debugNotify(message: String, mdc: MDC) =
+  def debug(mdc: MDC, message: String): Notify =
     Notify(DebugLevel, mdc, message, None)
 }

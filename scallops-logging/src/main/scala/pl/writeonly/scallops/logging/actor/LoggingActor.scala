@@ -8,7 +8,7 @@ class LoggingActor(logging: MdcLoggingImpl) extends Actor {
 
   def receive: Receive = {
     case Notify(Notify.ErrorLevel, mdc, message, Some(cause)) =>
-      logging.error(mdc, cause, message)
+      logging.error(mdc, message, cause)
 
     case Notify(Notify.ErrorLevel, mdc, message, None) =>
       logging.error(mdc, message)

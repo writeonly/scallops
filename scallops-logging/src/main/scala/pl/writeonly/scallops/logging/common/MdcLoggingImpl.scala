@@ -6,7 +6,7 @@ import akka.event.{DiagnosticLoggingAdapter, Logging}
 
 class MdcLoggingImpl(logging: DiagnosticLoggingAdapter) extends MdcLoggingLike {
 
-  def error(mdc: MDC, cause: Throwable, message: String): Unit =
+  def error(mdc: MDC, message: String, cause: Throwable): Unit =
     log(mdc) {
       logging.error(cause, message)
     }

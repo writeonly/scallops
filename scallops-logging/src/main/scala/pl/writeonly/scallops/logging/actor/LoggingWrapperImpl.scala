@@ -11,20 +11,20 @@ import pl.writeonly.scallops.logging.common.{
 class LoggingWrapperImpl(logging: LoggingAdapter, actorRef: ActorRef)
     extends LoggingWrapperLike(logging) {
 
-  def error(mdc: MDC, cause: Throwable, message: String): Unit =
-    actorRef ! Notify.errorNotify(cause, message, mdc)
+  def error(mdc: MDC, message: String, cause: Throwable): Unit =
+    actorRef ! Notify.error(mdc, message, cause)
 
   def error(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.errorNotify(message, mdc)
+    actorRef ! Notify.error(mdc, message)
 
   def warning(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.warningNotify(message, mdc)
+    actorRef ! Notify.warning(mdc, message)
 
   def info(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.infoNotify(message, mdc)
+    actorRef ! Notify.info(mdc, message)
 
   def debug(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.debugNotify(message, mdc)
+    actorRef ! Notify.debug(mdc, message)
 }
 
 object LoggingWrapperImpl {

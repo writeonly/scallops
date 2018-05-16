@@ -13,8 +13,8 @@ import pl.writeonly.scallops.logging.common.{
 class LoggingWrapperTyped(logging: LoggingAdapter, actorRef: MdcLoggingLike)
     extends LoggingWrapperLike(logging) {
 
-  def error(mdc: MDC, cause: Throwable, message: String): Unit =
-    actorRef.error(mdc, cause, message)
+  def error(mdc: MDC, message: String, cause: Throwable): Unit =
+    actorRef.error(mdc, message, cause)
 
   def error(mdc: MDC, message: String): Unit =
     actorRef.error(mdc, message)
