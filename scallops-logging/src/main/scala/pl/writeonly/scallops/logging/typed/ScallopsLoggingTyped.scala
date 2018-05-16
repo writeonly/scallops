@@ -1,9 +1,29 @@
 package pl.writeonly.scallops.logging.typed
 
-import pl.writeonly.scallops.logging.common.ScallopsLoggingLike
+import akka.actor.ActorSystem
+import akka.event.DiagnosticLoggingAdapter
+import pl.writeonly.scallops.logging.common.{
+  DiagnosticLoggingAdapterCreator,
+  LoggingWrapperLike,
+  MdcLoggingImpl,
+  ScallopsLoggingLike
+}
 
 trait ScallopsLoggingTyped extends ScallopsLoggingLike {
 
-  @volatile lazy val logger = LoggingWrapperTyped(actorSystem, this)
+  @volatile lazy val logger = ScallopsLoggingTyped(actorSystem, this)
+
+}
+
+object ScallopsLoggingTyped {
+  def apply(
+    logging: DiagnosticLoggingAdapter
+  )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
+    new LoggingWrapperLike(logging, MdcLoggingImpl(logging))
+
+  def apply(system: ActorSystem, logSource: AnyRef)(
+    implicit actorSystem: ActorSystem
+  ): LoggingWrapperLike =
+    apply(DiagnosticLoggingAdapterCreator.getLogger(actorSystem, logSource))
 
 }
