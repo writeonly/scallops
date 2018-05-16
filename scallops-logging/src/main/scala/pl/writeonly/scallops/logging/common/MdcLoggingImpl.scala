@@ -1,6 +1,5 @@
 package pl.writeonly.scallops.logging.common
 
-import akka.actor.{ActorSystem, TypedActor, TypedProps}
 import akka.event.Logging.MDC
 import akka.event.{DiagnosticLoggingAdapter, Logging}
 
@@ -37,16 +36,4 @@ final class MdcLoggingImpl(logging: DiagnosticLoggingAdapter)
     loggingMessage
     logging.mdc(Logging.emptyMDC)
   }
-}
-
-object MdcLoggingImpl {
-
-  def apply(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): MdcLoggingLike =
-    TypedActor(actorSystem).typedActorOf(
-      TypedProps(classOf[MdcLoggingLike], new MdcLoggingImpl(logging)),
-      "name"
-    )
-
 }

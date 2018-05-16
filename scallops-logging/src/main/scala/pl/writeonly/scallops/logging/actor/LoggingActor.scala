@@ -24,14 +24,3 @@ final class LoggingActor(logging: MdcLoggingImpl) extends Actor {
   }
 
 }
-
-object LoggingActor {
-
-  def props(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): ActorRef =
-    actorSystem.actorOf(
-      Props(classOf[LoggingActor], new MdcLoggingImpl(logging))
-    )
-
-}

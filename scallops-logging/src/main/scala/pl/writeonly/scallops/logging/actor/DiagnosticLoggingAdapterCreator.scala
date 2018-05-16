@@ -1,4 +1,4 @@
-package pl.writeonly.scallops.logging.common
+package pl.writeonly.scallops.logging.actor
 
 import akka.actor.{ActorSystem, ExtendedActorSystem}
 import akka.event.{BusLogging, DiagnosticLoggingAdapter, LogSource}
