@@ -77,8 +77,8 @@ lazy val settings = Seq(whiteSetting, graySetting, blackSetting)
 
 lazy val scallops = (project in file("."))
   //  .enablePlugins(JacocoItPlugin)
-  .aggregate(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, logging)
-  .dependsOn(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, logging)
+  .aggregate(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped, logging)
+  .dependsOn(specs, ops, pipe, monoidSpecs, monoid, monoidExternal, loggingCommon, loggingActor, loggingTyped, logging)
   .configs(IntegrationTest, End2EndTest)
   .settings(
     name := "scalaops",
@@ -93,6 +93,8 @@ lazy val scallops = (project in file("."))
     )
   )
 
+
+
 lazy val logging = (project in file("scallops-logging"))
   .dependsOn(specs, pipe, ops)
   .configs(IntegrationTest, End2EndTest)
@@ -106,6 +108,47 @@ lazy val logging = (project in file("scallops-logging"))
       "org.scalactic" %% "scalactic" % ScalaticVersion,
       "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
       "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
+      "ch.qos.logback" % "logback-classic" % "1.2.3"
+    )
+  )
+
+lazy val loggingTyped = (project in file("scallops-logging-typed"))
+  .dependsOn(specs, pipe, ops, loggingCommon)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scallops-logging-typed",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
+    )
+  )
+
+lazy val loggingActor = (project in file("scallops-logging-actor"))
+  .dependsOn(specs, pipe, ops, loggingCommon)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scallops-logging-actor",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+    )
+  )
+
+lazy val loggingCommon = (project in file("scallops-logging-common"))
+  .dependsOn(specs, pipe, ops)
+  .configs(IntegrationTest, End2EndTest)
+  .settings(
+    name := "scallops-logging-common",
+    commonSettings,
+    integrationInConfig, end2endInConfig,
+    whiteSetting, graySetting, blackSetting,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-library" % ScalaLibraryVersion,
       "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3"
     )

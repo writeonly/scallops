@@ -3,9 +3,9 @@ package pl.writeonly.scallops.logging.actor
 import akka.event.Logging.MDC
 
 final case class Notify(level: Int,
-                        cause: Option[Throwable],
+                        mdc: MDC,
                         message: String,
-                        mdc: MDC)
+                        cause: Option[Throwable])
 
 object Notify {
   val ErrorLevel = 4
@@ -14,13 +14,13 @@ object Notify {
   val DebugLevel = 1
 
   def errorNotify(cause: Throwable, message: String, mdc: MDC) =
-    Notify(ErrorLevel, Option(cause), message, mdc)
+    Notify(ErrorLevel, mdc, message, Option(cause))
   def errorNotify(message: String, mdc: MDC) =
-    Notify(ErrorLevel, None, message, mdc)
+    Notify(ErrorLevel, mdc, message, None)
   def warningNotify(message: String, mdc: MDC) =
-    Notify(WarningLevel, None, message, mdc)
+    Notify(WarningLevel, mdc, message, None)
   def infoNotify(message: String, mdc: MDC) =
-    Notify(InfoLevel, None, message, mdc)
+    Notify(InfoLevel, mdc, message, None)
   def debugNotify(message: String, mdc: MDC) =
-    Notify(DebugLevel, None, message, mdc)
+    Notify(DebugLevel, mdc, message, None)
 }

@@ -4,29 +4,29 @@ import akka.actor.{ActorSystem, TypedActor, TypedProps}
 import akka.event.Logging.MDC
 import akka.event.{DiagnosticLoggingAdapter, Logging}
 
-class LoggingImpl(logging: DiagnosticLoggingAdapter) extends LoggingLike {
+class MdcLoggingImpl(logging: DiagnosticLoggingAdapter) extends MdcLoggingLike {
 
-  def error(cause: Throwable, message: String, mdc: MDC): Unit =
+  def error(mdc: MDC, cause: Throwable, message: String): Unit =
     log(mdc) {
       logging.error(cause, message)
     }
 
-  def error(message: String, mdc: MDC): Unit =
+  def error(mdc: MDC, message: String): Unit =
     log(mdc) {
       logging.error(message)
     }
 
-  def warning(message: String, mdc: MDC): Unit =
+  def warning(mdc: MDC, message: String): Unit =
     log(mdc) {
       logging.warning(message)
     }
 
-  def info(message: String, mdc: MDC): Unit =
+  def info(mdc: MDC, message: String): Unit =
     log(mdc) {
       logging.info(message)
     }
 
-  def debug(message: String, mdc: MDC): Unit =
+  def debug(mdc: MDC, message: String): Unit =
     log(mdc) {
       logging.debug(message)
     }
@@ -38,13 +38,13 @@ class LoggingImpl(logging: DiagnosticLoggingAdapter) extends LoggingLike {
   }
 }
 
-object LoggingImpl {
+object MdcLoggingImpl {
 
   def apply(
     logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): LoggingLike =
+  )(implicit actorSystem: ActorSystem): MdcLoggingLike =
     TypedActor(actorSystem).typedActorOf(
-      TypedProps(classOf[LoggingLike], new LoggingImpl(logging)),
+      TypedProps(classOf[MdcLoggingLike], new MdcLoggingImpl(logging)),
       "name"
     )
 

@@ -5,34 +5,35 @@ import akka.event.Logging._
 import akka.event.{DiagnosticLoggingAdapter, LoggingAdapter}
 import pl.writeonly.scallops.logging.common.{
   DiagnosticLoggingAdapterCreator,
-  LoggingImpl,
-  LoggingLike,
+  MdcLoggingImpl,
+  MdcLoggingLike,
   LoggingWrapperLike
 }
 
-class LoggingWrapperTyped(logging: LoggingAdapter, actorRef: LoggingLike)
+class LoggingWrapperTyped(logging: LoggingAdapter, actorRef: MdcLoggingLike)
     extends LoggingWrapperLike(logging) {
 
-  protected def error(cause: Throwable, message: String, mdc: MDC): Unit =
-    actorRef.error(cause, message, mdc)
+  def error(mdc: MDC, cause: Throwable, message: String): Unit =
+    actorRef.error(mdc, cause, message)
 
-  protected def error(message: String, mdc: MDC): Unit =
-    actorRef.error(message, mdc)
+  def error(mdc: MDC, message: String): Unit =
+    actorRef.error(mdc, message)
 
-  protected def warning(message: String, mdc: MDC): Unit =
-    actorRef.warning(message, mdc)
+  def warning(mdc: MDC, message: String): Unit =
+    actorRef.warning(mdc, message)
 
-  protected def info(message: String, mdc: MDC): Unit =
-    actorRef.info(message, mdc)
+  def info(mdc: MDC, message: String): Unit =
+    actorRef.info(mdc, message)
 
-  protected def debug(message: String, mdc: MDC): Unit =
-    actorRef.debug(message, mdc)
+  def debug(mdc: MDC, message: String): Unit =
+    actorRef.debug(mdc, message)
 }
 
 object LoggingWrapperTyped {
-  def apply(logging: DiagnosticLoggingAdapter)(
-    implicit actorSystem: ActorSystem
-  ): LoggingWrapperLike = new LoggingWrapperTyped(logging, LoggingImpl(logging))
+  def apply(
+    logging: DiagnosticLoggingAdapter
+  )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
+    new LoggingWrapperTyped(logging, MdcLoggingImpl(logging))
 
   def apply(system: ActorSystem, logSource: AnyRef)(
     implicit actorSystem: ActorSystem
