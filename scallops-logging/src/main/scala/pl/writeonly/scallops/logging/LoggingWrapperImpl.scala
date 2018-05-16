@@ -1,10 +1,11 @@
 package pl.writeonly.scallops.logging
 
-import akka.actor.ActorRef
+import akka.actor.{ActorRef, ActorSystem}
 import akka.event.Logging._
-import akka.event.LoggingAdapter
+import akka.event.{DiagnosticLoggingAdapter, LoggingAdapter}
 
-class LoggingWrapper(logging: LoggingAdapter, actorRef: ActorRef) {
+class LoggingWrapperImpl(logging: LoggingAdapter, actorRef: ActorRef)
+    extends LoggingWrapperLike(logging) {
 
   private def notifyError(message: String, mdc: MDC): Unit =
     actorRef ! Notify.errorNotify(message, mdc)
@@ -16,21 +17,6 @@ class LoggingWrapper(logging: LoggingAdapter, actorRef: ActorRef) {
     actorRef ! Notify.infoNotify(message, mdc)
   private def notifyDebug(message: String, mdc: MDC): Unit =
     actorRef ! Notify.debugNotify(message, mdc)
-
-  private def format(template: String, seq: Any*): String =
-    logging.format(template, seq: _*)
-
-  def isErrorEnabled(implicit mdc: MDC): Boolean =
-    logging.isErrorEnabled
-
-  def isWarningEnabled(implicit mdc: MDC): Boolean =
-    logging.isWarningEnabled
-
-  def isInfoEnabled(implicit mdc: MDC): Boolean =
-    logging.isInfoEnabled
-
-  def isDebugEnabled(implicit mdc: MDC): Boolean =
-    logging.isDebugEnabled
 
   def error(cause: Throwable, template: String, seq: Any*)(
     implicit mdc: MDC
@@ -59,4 +45,10 @@ class LoggingWrapper(logging: LoggingAdapter, actorRef: ActorRef) {
       actorRef ! notifyDebug(format(template, seq), mdc)
     }
 
+}
+
+object LoggingWrapperImpl {
+  def apply(logging: DiagnosticLoggingAdapter)(
+    implicit actorSystem: ActorSystem
+  ) = new LoggingWrapperImpl(logging, LoggingActor.props(logging))
 }

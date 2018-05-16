@@ -1,43 +1,34 @@
 package pl.writeonly.scallops.logging
 
-import akka.actor.Actor
-import akka.event.Logging.MDC
-import akka.event.{DiagnosticLoggingAdapter, Logging}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.event.DiagnosticLoggingAdapter
 
-final case class Req(work: String, visitorId: Int)
-
-class LoggingActor(logging: DiagnosticLoggingAdapter) extends Actor {
+class LoggingActor(logging: LoggingImpl) extends Actor {
 
   def receive: Receive = {
     case Notify(Notify.ErrorLevel, Some(cause), message, mdc) =>
-      log(mdc) {
-        logging.error(cause, message)
-      }
+      logging.error(cause, message, mdc)
 
     case Notify(Notify.ErrorLevel, None, message, mdc) =>
-      log(mdc) {
-        logging.error(message)
-      }
+      logging.error(message, mdc)
 
     case Notify(Notify.WarningLevel, None, message, mdc) =>
-      log(mdc) {
-        logging.warning(message)
-      }
+      logging.warning(message, mdc)
 
     case Notify(Notify.InfoLevel, None, message, mdc) =>
-      log(mdc) {
-        logging.info(message)
-      }
+      logging.info(message, mdc)
 
     case Notify(Notify.DebugLevel, None, message, mdc) =>
-      log(mdc) {
-        logging.debug(message)
-      }
+      logging.debug(message, mdc)
   }
 
-  def log(mdc: MDC)(loggingMessage: => Unit): Unit = {
-    logging.mdc(mdc)
-    loggingMessage
-    logging.mdc(Logging.emptyMDC)
-  }
+}
+
+object LoggingActor {
+
+  def props(
+    logging: DiagnosticLoggingAdapter
+  )(implicit actorSystem: ActorSystem): ActorRef =
+    actorSystem.actorOf(Props(classOf[LoggingActor], new LoggingImpl(logging)))
+
 }
