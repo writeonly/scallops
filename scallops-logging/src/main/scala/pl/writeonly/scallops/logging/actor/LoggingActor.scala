@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.event.DiagnosticLoggingAdapter
 import pl.writeonly.scallops.logging.common.MdcLoggingImpl
 
-class LoggingActor(logging: MdcLoggingImpl) extends Actor {
+final class LoggingActor(logging: MdcLoggingImpl) extends Actor {
 
   def receive: Receive = {
     case Notify(Notify.ErrorLevel, mdc, message, Some(cause)) =>

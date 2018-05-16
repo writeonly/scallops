@@ -4,7 +4,8 @@ import akka.actor.{ActorSystem, TypedActor, TypedProps}
 import akka.event.Logging.MDC
 import akka.event.{DiagnosticLoggingAdapter, Logging}
 
-class MdcLoggingImpl(logging: DiagnosticLoggingAdapter) extends MdcLoggingLike {
+final class MdcLoggingImpl(logging: DiagnosticLoggingAdapter)
+    extends MdcLoggingLike {
 
   def error(mdc: MDC, message: String, cause: Throwable): Unit =
     log(mdc) {

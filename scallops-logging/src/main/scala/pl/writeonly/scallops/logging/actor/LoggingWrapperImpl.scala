@@ -8,30 +8,14 @@ import pl.writeonly.scallops.logging.common.{
   LoggingWrapperLike
 }
 
-class LoggingWrapperImpl(logging: LoggingAdapter, actorRef: ActorRef)
-    extends LoggingWrapperLike(logging) {
-
-  def error(mdc: MDC, message: String, cause: Throwable): Unit =
-    actorRef ! Notify.error(mdc, message, cause)
-
-  def error(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.error(mdc, message)
-
-  def warning(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.warning(mdc, message)
-
-  def info(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.info(mdc, message)
-
-  def debug(mdc: MDC, message: String): Unit =
-    actorRef ! Notify.debug(mdc, message)
-}
-
 object LoggingWrapperImpl {
   def apply(
     logging: DiagnosticLoggingAdapter
   )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
-    new LoggingWrapperImpl(logging, LoggingActor.props(logging))
+    new LoggingWrapperLike(
+      logging,
+      new LoggingActorWrapper(LoggingActor.props(logging))
+    )
 
   def apply(system: ActorSystem, logSource: AnyRef)(
     implicit actorSystem: ActorSystem

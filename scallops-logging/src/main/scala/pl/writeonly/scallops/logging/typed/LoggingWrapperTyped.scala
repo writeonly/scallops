@@ -1,39 +1,18 @@
 package pl.writeonly.scallops.logging.typed
 
 import akka.actor.ActorSystem
-import akka.event.Logging._
-import akka.event.{DiagnosticLoggingAdapter, LoggingAdapter}
+import akka.event.DiagnosticLoggingAdapter
 import pl.writeonly.scallops.logging.common.{
   DiagnosticLoggingAdapterCreator,
-  MdcLoggingImpl,
-  MdcLoggingLike,
-  LoggingWrapperLike
-}
-
-class LoggingWrapperTyped(logging: LoggingAdapter, actorRef: MdcLoggingLike)
-    extends LoggingWrapperLike(logging) {
-
-  def error(mdc: MDC, message: String, cause: Throwable): Unit =
-    actorRef.error(mdc, message, cause)
-
-  def error(mdc: MDC, message: String): Unit =
-    actorRef.error(mdc, message)
-
-  def warning(mdc: MDC, message: String): Unit =
-    actorRef.warning(mdc, message)
-
-  def info(mdc: MDC, message: String): Unit =
-    actorRef.info(mdc, message)
-
-  def debug(mdc: MDC, message: String): Unit =
-    actorRef.debug(mdc, message)
+  LoggingWrapperLike,
+  MdcLoggingImpl
 }
 
 object LoggingWrapperTyped {
   def apply(
     logging: DiagnosticLoggingAdapter
   )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
-    new LoggingWrapperTyped(logging, MdcLoggingImpl(logging))
+    new LoggingWrapperLike(logging, MdcLoggingImpl(logging))
 
   def apply(system: ActorSystem, logSource: AnyRef)(
     implicit actorSystem: ActorSystem

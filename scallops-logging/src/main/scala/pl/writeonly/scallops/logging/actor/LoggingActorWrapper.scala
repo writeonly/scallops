@@ -4,7 +4,7 @@ import akka.actor.ActorRef
 import akka.event.Logging.MDC
 import pl.writeonly.scallops.logging.common.MdcLoggingLike
 
-class LoggingActorWrapper(actorRef: ActorRef) extends MdcLoggingLike{
+final class LoggingActorWrapper(actorRef: ActorRef) extends MdcLoggingLike {
   def error(mdc: MDC, message: String, cause: Throwable): Unit =
     actorRef ! Notify.error(mdc, message, cause)
 
