@@ -2,6 +2,19 @@ package pl.writeonly.scalaops.ops
 
 import java.util.function.Consumer
 
+import pl.writeonly.scalaops.ops.AutoCloseableOps.FAB
+
+trait AutoCloseableOps {
+  implicit class AutoCloseableOps[A <: AutoCloseable](resource: A) {
+    def using[B](f: FAB[A, B]): B =
+      try {
+        f(resource)
+      } finally {
+        resource.close()
+      }
+  }
+}
+
 object AutoCloseableOps {
 
   type FAB[A, B] = A => B
