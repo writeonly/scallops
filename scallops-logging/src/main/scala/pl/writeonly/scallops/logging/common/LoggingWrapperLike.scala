@@ -1,7 +1,7 @@
-package pl.writeonly.scallops.logging
+package pl.writeonly.scallops.logging.common
 
 import akka.event.Logging._
-import akka.event.{DiagnosticLoggingAdapter, LoggingAdapter}
+import akka.event.LoggingAdapter
 
 abstract class LoggingWrapperLike(logging: LoggingAdapter) {
 

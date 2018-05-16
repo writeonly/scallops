@@ -1,7 +1,8 @@
-package pl.writeonly.scallops.logging
+package pl.writeonly.scallops.logging.actor
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.event.DiagnosticLoggingAdapter
+import pl.writeonly.scallops.logging.common.LoggingImpl
 
 class LoggingActor(logging: LoggingImpl) extends Actor {
 

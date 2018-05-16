@@ -3,12 +3,13 @@ package pl.writeonly.scallops.logging
 import akka.actor.ActorSystem
 import akka.event.Logging.MDC
 import pl.writeonly.scalaops.specs.GrayScalarSpec
+import pl.writeonly.scallops.logging.actor.ScallopsLoggingImpl
 
 class ScallopsLoggingScalarSpec extends GrayScalarSpec {
   it should "log message use logger" in {
     implicit val mdc: MDC = Map("key" -> "value")
 
-    val logging = new ScallopsLogging {
+    val logging = new ScallopsLoggingImpl {
       override implicit protected val actorSystem: ActorSystem = ActorSystem()
 
       def logMessage(): Unit = {

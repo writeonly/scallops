@@ -1,8 +1,12 @@
-package pl.writeonly.scallops.logging
+package pl.writeonly.scallops.logging.actor
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.event.Logging._
 import akka.event.{DiagnosticLoggingAdapter, LoggingAdapter}
+import pl.writeonly.scallops.logging.common.{
+  DiagnosticLoggingAdapterCreator,
+  LoggingWrapperLike
+}
 
 class LoggingWrapperImpl(logging: LoggingAdapter, actorRef: ActorRef)
     extends LoggingWrapperLike(logging) {
@@ -48,7 +52,13 @@ class LoggingWrapperImpl(logging: LoggingAdapter, actorRef: ActorRef)
 }
 
 object LoggingWrapperImpl {
-  def apply(logging: DiagnosticLoggingAdapter)(
+  def apply(
+    logging: DiagnosticLoggingAdapter
+  )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
+    new LoggingWrapperImpl(logging, LoggingActor.props(logging))
+
+  def apply(system: ActorSystem, logSource: AnyRef)(
     implicit actorSystem: ActorSystem
-  ) = new LoggingWrapperImpl(logging, LoggingActor.props(logging))
+  ): LoggingWrapperLike =
+    apply(DiagnosticLoggingAdapterCreator.getLogger(actorSystem, logSource))
 }

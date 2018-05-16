@@ -1,4 +1,4 @@
-package pl.writeonly.scallops.logging
+package pl.writeonly.scallops.logging.common
 
 import akka.actor.{ActorSystem, TypedActor, TypedProps}
 import akka.event.Logging.MDC

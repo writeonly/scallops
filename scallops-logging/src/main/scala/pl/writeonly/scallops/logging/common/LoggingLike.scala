@@ -1,7 +1,6 @@
-package pl.writeonly.scallops.logging
+package pl.writeonly.scallops.logging.common
 
 import akka.event.Logging.MDC
-import akka.event.{DiagnosticLoggingAdapter, Logging}
 
 trait LoggingLike {
 
