@@ -2,9 +2,9 @@ package pl.writeonly.scallops.logging.actor
 
 import akka.actor.ActorRef
 import akka.event.Logging.MDC
-import pl.writeonly.scallops.logging.common.MdcLoggingLike
+import pl.writeonly.scallops.logging.common.BackLogging
 
-final class LoggingActorWrapper(actorRef: ActorRef) extends MdcLoggingLike {
+final class BackLoggingWrapActor(actorRef: ActorRef) extends BackLogging[Unit] {
   def error(mdc: MDC, message: String, cause: Throwable): Unit =
     actorRef ! Notify.error(mdc, message, cause)
 

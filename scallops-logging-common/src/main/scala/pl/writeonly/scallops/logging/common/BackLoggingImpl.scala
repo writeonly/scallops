@@ -1,39 +1,43 @@
 package pl.writeonly.scallops.logging.common
 
+import akka.event.Logging
 import akka.event.Logging.MDC
-import akka.event.{DiagnosticLoggingAdapter, Logging}
 
-final class MdcLoggingImpl(logging: DiagnosticLoggingAdapter)
-    extends MdcLoggingLike {
+final class BackLoggingImpl(dla: DLA) extends BackLogging[Unit] {
 
   def error(mdc: MDC, message: String, cause: Throwable): Unit =
     log(mdc) {
-      logging.error(cause, message)
+      dla.error(cause, message)
     }
 
   def error(mdc: MDC, message: String): Unit =
     log(mdc) {
-      logging.error(message)
+      dla.error(message)
     }
 
   def warning(mdc: MDC, message: String): Unit =
     log(mdc) {
-      logging.warning(message)
+      dla.warning(message)
     }
 
   def info(mdc: MDC, message: String): Unit =
     log(mdc) {
-      logging.info(message)
+      dla.info(message)
     }
 
   def debug(mdc: MDC, message: String): Unit =
     log(mdc) {
-      logging.debug(message)
+      dla.debug(message)
     }
 
   private def log(mdc: MDC)(loggingMessage: => Unit): Unit = {
-    logging.mdc(mdc)
+    dla.mdc(mdc)
     loggingMessage
-    logging.mdc(Logging.emptyMDC)
+    dla.mdc(Logging.emptyMDC)
   }
+}
+
+object BackLoggingImpl {
+  def apply(logging: DLA): BackLogging[Unit] = new BackLoggingImpl(logging)
+
 }

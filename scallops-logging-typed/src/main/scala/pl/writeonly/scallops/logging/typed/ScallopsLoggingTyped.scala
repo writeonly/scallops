@@ -1,34 +1,29 @@
 package pl.writeonly.scallops.logging.typed
 
 import akka.actor.{ActorSystem, TypedActor, TypedProps}
-import akka.event.DiagnosticLoggingAdapter
 import pl.writeonly.scallops.logging.common._
 
 trait ScallopsLoggingTyped extends ScallopsLoggingLike {
 
-  @volatile lazy val logger = ScallopsLoggingTyped(actorSystem, this)
+  @volatile lazy val logger = ScallopsLoggingTyped(this)
 
 }
 
 object ScallopsLoggingTyped {
 
-  def apply(system: ActorSystem, logSource: AnyRef)(
-    implicit actorSystem: ActorSystem
-  ): LoggingWrapperLike =
+  def apply(logSource: AnyRef)(implicit system: ActorSystem): FrontLogging =
     loggingWrapperLike(
-      DiagnosticLoggingAdapterCreator.getLogger(actorSystem, logSource)
+      DiagnosticLoggingAdapterCreator.getLogger(system, logSource)
     )
 
-  def loggingWrapperLike(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
-    new LoggingWrapperLike(logging, mdcLoggingImpl(logging))
+  def loggingWrapperLike(dla: DLA)(implicit system: ActorSystem): FrontLogging =
+    new FrontLogging(dla, mdcLoggingImpl(dla))
 
   def mdcLoggingImpl(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): MdcLoggingLike =
-    TypedActor(actorSystem).typedActorOf(
-      TypedProps(classOf[MdcLoggingLike], new MdcLoggingImpl(logging)),
+    dla: DLA
+  )(implicit system: ActorSystem): BackLogging[Unit] =
+    TypedActor(system).typedActorOf(
+      TypedProps(classOf[BackLogging[Unit]], BackLoggingImpl(dla)),
       "name"
     )
 }

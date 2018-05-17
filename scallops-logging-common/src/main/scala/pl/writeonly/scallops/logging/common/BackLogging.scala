@@ -2,7 +2,7 @@ package pl.writeonly.scallops.logging.common
 
 import akka.event.Logging.MDC
 
-trait MdcLogging[A] {
+trait BackLogging[A] {
   def error(mdc: MDC, message: String, cause: Throwable): A
 
   def error(mdc: MDC, message: String): A

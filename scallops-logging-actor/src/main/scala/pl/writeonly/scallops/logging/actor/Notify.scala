@@ -1,14 +1,14 @@
 package pl.writeonly.scallops.logging.actor
 
 import akka.event.Logging.MDC
-import pl.writeonly.scallops.logging.common.MdcLogging
+import pl.writeonly.scallops.logging.common.BackLogging
 
 final case class Notify(level: Int,
                         mdc: MDC,
                         message: String,
                         cause: Option[Throwable])
 
-object Notify extends MdcLogging[Notify] {
+object Notify extends BackLogging[Notify] {
   val ErrorLevel = 4
   val WarningLevel = 3
   val InfoLevel = 2

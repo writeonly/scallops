@@ -1,25 +1,25 @@
 package pl.writeonly.scallops.logging.actor
 
 import akka.actor.Actor
-import pl.writeonly.scallops.logging.common.MdcLoggingImpl
+import pl.writeonly.scallops.logging.common.BackLogging
 
-final class LoggingActor(logging: MdcLoggingImpl) extends Actor {
+final class ActorLogging(back: BackLogging[Unit]) extends Actor {
 
   def receive: Receive = {
     case Notify(Notify.ErrorLevel, mdc, message, Some(cause)) =>
-      logging.error(mdc, message, cause)
+      back.error(mdc, message, cause)
 
     case Notify(Notify.ErrorLevel, mdc, message, None) =>
-      logging.error(mdc, message)
+      back.error(mdc, message)
 
     case Notify(Notify.WarningLevel, mdc, message, None) =>
-      logging.warning(mdc, message)
+      back.warning(mdc, message)
 
     case Notify(Notify.InfoLevel, mdc, message, None) =>
-      logging.info(mdc, message)
+      back.info(mdc, message)
 
     case Notify(Notify.DebugLevel, mdc, message, None) =>
-      logging.debug(mdc, message)
+      back.debug(mdc, message)
   }
 
 }

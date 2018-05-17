@@ -1,38 +1,25 @@
 package pl.writeonly.scallops.logging.actor
 
 import akka.actor.{ActorRef, ActorSystem, Props}
-import akka.event.DiagnosticLoggingAdapter
-import pl.writeonly.scallops.logging.common.{
-  LoggingWrapperLike,
-  MdcLoggingImpl,
-  ScallopsLoggingLike
-}
+import pl.writeonly.scallops.logging.common._
 
 trait ScallopsLoggingImpl extends ScallopsLoggingLike {
 
-  @volatile lazy val logger = ScallopsLoggingImpl(actorSystem, this)
+  @volatile lazy val logger = ScallopsLoggingImpl(this)
 
 }
 
 object ScallopsLoggingImpl {
 
-  def apply(system: ActorSystem, logSource: AnyRef)(
-    implicit actorSystem: ActorSystem
-  ): LoggingWrapperLike =
+  def apply(logSource: AnyRef)(implicit system: ActorSystem): FrontLogging =
     loggingWrapperLike(
-      DiagnosticLoggingAdapterCreator.getLogger(actorSystem, logSource)
+      DiagnosticLoggingAdapterCreator.getLogger(system, logSource)
     )
 
-  def loggingWrapperLike(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): LoggingWrapperLike =
-    new LoggingWrapperLike(logging, new LoggingActorWrapper(actorRef(logging)))
+  def loggingWrapperLike(dla: DLA)(implicit system: ActorSystem): FrontLogging =
+    new FrontLogging(dla, new BackLoggingWrapActor(actorRef(dla)))
 
-  def actorRef(
-    logging: DiagnosticLoggingAdapter
-  )(implicit actorSystem: ActorSystem): ActorRef =
-    actorSystem.actorOf(
-      Props(classOf[LoggingActor], new MdcLoggingImpl(logging))
-    )
+  def actorRef(dla: DLA)(implicit system: ActorSystem): ActorRef =
+    system.actorOf(Props(classOf[ActorLogging], BackLoggingImpl(dla)))
 
 }

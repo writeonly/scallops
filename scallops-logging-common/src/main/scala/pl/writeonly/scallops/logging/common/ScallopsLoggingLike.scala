@@ -5,6 +5,6 @@ import akka.actor.ActorSystem
 trait ScallopsLoggingLike {
   protected implicit def actorSystem: ActorSystem
 
-  def logger: LoggingWrapperLike
+  def logger: FrontLogging
 
 }
